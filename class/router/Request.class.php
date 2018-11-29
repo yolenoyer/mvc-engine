@@ -24,6 +24,8 @@ class Request
 		$this->params = new ObjectFromArray($params);
 		$this->controller = new $route->controllerName($this);
 		$this->headers = self::getHeaders();
+		$this->method = \Get::Method();
+		$this->url = \Get::RelativeUrl();
 	}
 }
 

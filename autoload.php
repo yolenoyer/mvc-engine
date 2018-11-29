@@ -17,6 +17,7 @@ spl_autoload_register(function($class) {
 		'class',
 		'class/router',
 		'class/util',
+		'class/template-generator',
 		'controller',
 		'models',
 	];

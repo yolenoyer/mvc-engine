@@ -6,7 +6,7 @@ class ShowNameController extends BaseController
 	{
 		return $this->getTemplateResponse('show-name', [
 			'firstname' => $_POST['firstname'] ?? 'Anonyme',
-			'lastname'  => $_POST['lastname']  ?? ''
+			'lastname'  => $_POST['lastname']  ?? 'Anonyme',
 		]);
 	}
 }

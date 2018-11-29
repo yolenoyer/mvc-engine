@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Classe de base pour tous les contrôleurs.
+ */
 abstract class BaseController
 {
 	public function __construct(Request $request, string $base_template_name='base')
@@ -8,22 +11,31 @@ abstract class BaseController
 		$this->baseTemplateName = $base_template_name;
 	}
 
+
+	/**
+	 * Renvoie un template processé, contenant les paramètres fournis ainsi qu'un objet 'request'
+	 * additionnel.
+	 *
+	 * @param string $template_name  Nom de template
+	 * @param array $params          Paramètres à fournir au template
+	 *
+	 * @return string
+	 */
 	public function getTemplateOutput(string $template_name, array $params=[]): string {
 		$params = array_merge([], $params);
+
 		$params['request'] = $this->request;
+
+		$params['app'] = [
+			'project_root' => \Get::ProjectRoot(),
+			'url_root' => \Get::UrlRoot(),
+		];
+
 		$params = new ObjectFromArray($params);
 
-		ob_start();
-		require "template/{$template_name}.php";
-		$content = ob_get_contents();
-		ob_end_clean();
+		$generator = TemplateGenerator::getInstance();
 
-		ob_start();
-		require "template/{$this->baseTemplateName}.php";
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		return $output;
+		return $generator->generate($template_name, $params);
 	}
 
 	/**
