@@ -1,0 +1,10 @@
+{
+    "name": "administrateur/mvc",
+    "authors": [
+        {
+            "name": "Johann DAVID",
+            "email": "yolenoyer@gmail.com"
+        }
+    ],
+    "require": {}
+}

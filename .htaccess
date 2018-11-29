@@ -1,0 +1,6 @@
+RewriteEngine on
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !=index.php
+# RewriteCond %{REQUEST_URI} !=generate_class.php
+RewriteRule ^.*$ index.php [L,QSA]
