@@ -3,15 +3,22 @@
 require __DIR__.'/../vendor/autoload.php';
 
 
+// Configuration globale:
+require "config.php";
+
+// Création du routeur:
 $router = new \App\Router();
 
 $url = \Mvc\App::get('relativeUrl');
+
+// Recherche de la route appropriée:
 $request = $router->find($url);
 
 if (is_null($request)) {
 	$request = $router->find('/');
 }
 
+// Réponse:
 $response = $request->controller->getResponse();
 $response->send();
 

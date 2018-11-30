@@ -8,6 +8,9 @@ use \Mvc\App;
 
 class Processor
 {
+	private $templatesDir;
+
+
 	public function __construct(string $templates_dir)
 	{
 		$this->templatesDir = $templates_dir;
@@ -16,13 +19,16 @@ class Processor
 
 	/**
 	 * Retourne une instance unique de \Templating\Processor (singleton).
+	 * Utilise la variable de configuration 'templating.templateDir' contenue dans le container.
 	 *
 	 * @return \Templating\Processor
 	 */
 	static function getInstance(): Processor {
 		static $instance = null;
 		if (is_null($instance)) {
-			$instance = new Processor(App::get('projectPath') . '/src/App/views'); // TODO!!!
+			$container = \Mvc\Container::getInstance();
+			$templates_dir = $container->getParameter('templating.templateDir');
+			$instance = new Processor($templates_dir);
 		}
 		return $instance;
 	}
