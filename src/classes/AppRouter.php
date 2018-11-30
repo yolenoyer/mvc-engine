@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Routeur principal de l'appication.
+ */
 class AppRouter extends \Routing\Router
 {
 	public function __construct()

@@ -7,9 +7,9 @@
 	Prénom: [[ firstname ]]
 </p>
 
-<?php if (!is_null($params->request->params->id)): ?>
+<?php if (!is_null($params->request->urlParams->id)): ?>
 <p>
-	Id: [[ request.params.id ]]
+	Id: [[ request.urlParams.id ]]
 </p>
 <?php endif; ?>
 

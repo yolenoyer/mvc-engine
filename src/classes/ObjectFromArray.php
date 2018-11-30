@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Crée un object à partir d'un tableau associatif.
+ * Chaque clé du tableau est accessible via une propriété homonyme.
+ */
 class ObjectFromArray
 {
 	public $array;

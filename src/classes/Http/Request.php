@@ -10,18 +10,25 @@ namespace Http;
 class Request
 {
 	public $controller;
-	public $params;
+	public $urlParams;
 	public $route;
 	public $headers;
 	public $method;
 	public $url;
 
 
-	public function __construct($route, $params)
+	/**
+	 * Constructeur.
+	 *
+	 * @param \Routing\Route $route  Route à partir de laquelle on crée cette requête
+	 * @param array $url_params      Paramètres de l'url, correspondant aux variables
+	 *                               spécifiques de la route
+	 */
+	public function __construct(\Routing\Route $route, array $url_params)
 	{
 		$this->route = $route;
-		$this->params = new \ObjectFromArray($params);
-		$this->headers = self::getHeaders();
+		$this->urlParams = new \ObjectFromArray($url_params);
+		$this->headers = self::generateHeaders();
 		$this->method = $_SERVER['REQUEST_METHOD'];
 		$this->url = \App::get('relativeUrl');
 		$controller_name = $route->getControllerName();
@@ -41,7 +48,12 @@ class Request
 	}
 
 
-	private static function getHeaders()
+	/**
+	 * Renvoie des informations simplifiées sur les headers de la requête.
+	 *
+	 * @return \ObjectFromArray
+	 */
+	private static function generateHeaders(): \ObjectFromArray
 	{
 		$headers = [];
 		if (isset($_SERVER['HTTP_ACCEPT'])) {
