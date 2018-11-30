@@ -21,10 +21,23 @@ class Request
 	{
 		$this->route = $route;
 		$this->params = new \ObjectFromArray($params);
-		$this->controller = new $route->controllerName($this);
 		$this->headers = self::getHeaders();
 		$this->method = $_SERVER['REQUEST_METHOD'];
 		$this->url = \App::get('relativeUrl');
+		$controller_name = $route->getControllerName();
+		$this->controller = new $controller_name($this);
+	}
+
+
+	/**
+	 * Renvoie les paramètres optionnels donnés au routeur, et destinés à l'initialisation du
+	 * contrôleur.
+	 *
+	 * @return \ObjectFromArray
+	 */
+	public function getRouteControllerParameters(): \ObjectFromArray
+	{
+		return $this->route->controllerDefinition->getParameters();
 	}
 
 

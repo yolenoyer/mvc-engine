@@ -9,14 +9,14 @@ namespace Routing;
 class Route
 {
 	public $templateUrl;
-	public $controllerName;
+	public $controllerDefinition;
 	public $templateUrlParts;
 
 
-	public function __construct(string $templateUrl, string $controller_name)
+	public function __construct(string $templateUrl, $controller_definition)
 	{
 		$this->setTemplateUrl($templateUrl);
-		$this->controllerName = $controller_name;
+		$this->controllerDefinition = new ControllerDefinition($controller_definition);
 	}
 
 
@@ -50,6 +50,13 @@ class Route
 
 		return new \Http\Request($this, $url_params);
 	}
+
+
+	public function getControllerName(): string
+	{
+		return $this->controllerDefinition->getName();
+	}
+	
 
 
 	public static function isVariable(string $s): bool

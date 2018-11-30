@@ -13,3 +13,7 @@
 </p>
 <?php endif; ?>
 
+<p>
+	Template: [[ template ]]
+</p>
+

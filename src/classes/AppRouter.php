@@ -8,6 +8,9 @@ class AppRouter extends \Routing\Router
 			'/'              => '\Controller\HomeController',
 			'/show-name'     => '\Controller\ShowNameController',
 			'/show-name/:id' => '\Controller\ShowNameController',
+			'/test' => [ '\Controller\ShowNameController', [
+				'template' => 'mypage'
+			] ],
 		]);
 	}
 }

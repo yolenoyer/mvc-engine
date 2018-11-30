@@ -3,6 +3,9 @@
 namespace Routing;
 
 
+/**
+ * Routeur générique.
+ */
 class Router
 {
 	public $routes = [];
@@ -15,14 +18,14 @@ class Router
 	}
 
 
-	public function add($route, string $controller_name=null): Router
+	public function add($route, $controller_definition=null): Router
 	{
 		if (is_array($route)) {
 			foreach($route as $r => $c) {
 				$this->add($r, $c);
 			}
 		} else {
-			$this->routes[] = new Route($route, $controller_name);
+			$this->routes[] = new Route($route, $controller_definition);
 		}
 
 		return $this;

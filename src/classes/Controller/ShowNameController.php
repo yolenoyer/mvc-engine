@@ -10,6 +10,7 @@ class ShowNameController extends TemplateController
 		return $this->getTemplateResponse('show-name', [
 			'firstname' => $_POST['firstname'] ?? 'Anonyme',
 			'lastname'  => $_POST['lastname']  ?? 'Anonyme',
+			'template' => $this->routeParameters->template,
 		]);
 	}
 }
