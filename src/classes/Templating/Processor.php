@@ -1,6 +1,9 @@
 <?php
 
-class TemplateGenerator
+namespace Templating;
+
+
+class Processor
 {
 	public function __construct(string $templates_dir)
 	{
@@ -9,14 +12,14 @@ class TemplateGenerator
 
 
 	/**
-	 * Retourne une instance unique de TemplateGenerator (singleton).
+	 * Retourne une instance unique de \Templating\Processor (singleton).
 	 *
-	 * @return TemplateGenerator
+	 * @return \Templating\Processor
 	 */
-	static function getInstance(): TemplateGenerator {
+	static function getInstance(): Processor {
 		static $instance = null;
 		if (is_null($instance)) {
-			$instance = new TemplateGenerator(\Get::ProjectRoot() . '/template');
+			$instance = new Processor(\Get::ProjectRoot() . '/views');
 		}
 		return $instance;
 	}
@@ -43,7 +46,7 @@ class TemplateGenerator
 	 *
 	 * @return string
 	 */
-	public static function process(string $output, ObjectFromArray $params)
+	public static function process(string $output, \ObjectFromArray $params)
 	{
 		return preg_replace_callback('/\[\[([^[]*)\]\]/', function($matches) use($params) {
 			$tag = trim($matches[1]);
@@ -69,7 +72,7 @@ class TemplateGenerator
 	 *
 	 * @return string
 	 */
-	function generate(string $template_name, ObjectFromArray $params): string
+	function generate(string $template_name, \ObjectFromArray $params): string
 	{
 		ob_start();
 		require $this->getTemplateFile($template_name);

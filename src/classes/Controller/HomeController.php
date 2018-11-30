@@ -1,8 +1,11 @@
 <?php
 
+namespace Controller;
+
+
 class HomeController extends BaseController
 {
-	public function getResponse(): string
+	public function getResponse(): \Http\Response
 	{
 		return $this->getTemplateResponse('home');
 	}

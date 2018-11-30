@@ -1,6 +1,6 @@
 <?php
 
-$project_getters = [
+$GLOBALS['project_getters'] = [
 	'ProjectRoot' => function() {
 		return realpath(__DIR__.'/..');
 	},
@@ -19,6 +19,7 @@ $project_getters = [
 ];
 
 
+
 class Get {
 	protected static function getNamedSingleton($name, $function)
 	{
@@ -31,7 +32,7 @@ class Get {
 
 	public static function __callStatic($name, $args)
 	{
-		global $project_getters;
+		$project_getters = $GLOBALS['project_getters'];
 		foreach ($project_getters as $getter_name => $getter) {
 			if ($name == $getter_name) {
 				return self::getNamedSingleton($name, $getter);
