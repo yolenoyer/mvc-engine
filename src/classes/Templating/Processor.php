@@ -19,7 +19,7 @@ class Processor
 	static function getInstance(): Processor {
 		static $instance = null;
 		if (is_null($instance)) {
-			$instance = new Processor(\Get::ProjectRoot() . '/views');
+			$instance = new Processor(\App::get('projectPath') . '/src/views');
 		}
 		return $instance;
 	}

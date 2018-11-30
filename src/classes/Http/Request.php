@@ -13,6 +13,7 @@ class Request
 	public $params;
 	public $route;
 	public $headers;
+	public $method;
 
 
 	public function __construct($route, $params)
@@ -21,8 +22,8 @@ class Request
 		$this->params = new \ObjectFromArray($params);
 		$this->controller = new $route->controllerName($this);
 		$this->headers = self::getHeaders();
-		$this->method = \Get::Method();
-		$this->url = \Get::RelativeUrl();
+		$this->method = $_SERVER['REQUEST_METHOD'];
+		$this->url = \App::get('relativeUrl');
 	}
 
 

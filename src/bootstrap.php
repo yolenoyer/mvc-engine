@@ -13,7 +13,7 @@ $router->add([
 
 
 
-$url = \Get::RelativeUrl();
+$url = App::get('relativeUrl');
 $request = $router->find($url);
 
 if (is_null($request)) {

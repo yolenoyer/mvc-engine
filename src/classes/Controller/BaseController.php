@@ -32,8 +32,8 @@ abstract class BaseController
 		$params['request'] = $this->request;
 
 		$params['app'] = [
-			'project_root' => \Get::ProjectRoot(),
-			'url_root' => \Get::UrlRoot(),
+			'project_path' => \App::get('projectPath'),
+			'url_root' => \App::get('urlRoot'),
 		];
 
 		$params = new \ObjectFromArray($params);
