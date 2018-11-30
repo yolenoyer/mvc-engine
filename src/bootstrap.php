@@ -3,15 +3,7 @@
 require __DIR__.'/../vendor/autoload.php';
 
 
-
-$router = new \Routing\Router();
-$router->add([
-	'/'              => '\Controller\HomeController',
-	'/show-name'     => '\Controller\ShowNameController',
-	'/show-name/:id' => '\Controller\ShowNameController',
-]);
-
-
+$router = new \AppRouter();
 
 $url = App::get('relativeUrl');
 $request = $router->find($url);
