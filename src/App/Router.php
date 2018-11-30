@@ -14,12 +14,7 @@ class Router extends \Mvc\Routing\Router
 			'/'              => '\App\Controller\HomeController',
 			'/show-name'     => '\App\Controller\ShowNameController',
 			'/show-name/:id' => '\App\Controller\ShowNameController',
-			'/test'          =>
-				[
-					'\App\Controller\ShowNameController', [
-						'template' => 'mypage'
-					]
-			   	],
+			'/test'          => [ '\App\Controller\ShowNameController', [ 'template' => 'mypage' ] ],
 		]);
 	}
 }

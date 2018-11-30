@@ -11,6 +11,11 @@ class Router
 	public $routes = [];
 
 
+	/**
+	 * Constructeur.
+	 *
+	 * @param array|null $routes  Routes initiales à ajouter avec addRoutes()
+	 */
 	public function __construct(array $routes=null) {
 		if (!is_null($routes)) {
 			$this->addRoutes($routes);
@@ -46,7 +51,14 @@ class Router
 	
 
 
-	public function find($url)
+	/**
+	 * Chercher une route qui matche avec l'url donné.
+	 *
+	 * @param string $url
+	 *
+	 * @return Request|null
+	 */
+	public function find(string $url)
 	{
 		foreach ($this->routes as $route) {
 			$request = $route->match($url);
