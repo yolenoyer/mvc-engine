@@ -3,7 +3,7 @@
 namespace Controller;
 
 
-class ShowNameController extends BaseController
+class ShowNameController extends TemplateController
 {
 	public function getResponse(): \Http\Response
 	{

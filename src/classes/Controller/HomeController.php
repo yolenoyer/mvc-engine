@@ -3,7 +3,7 @@
 namespace Controller;
 
 
-class HomeController extends BaseController
+class HomeController extends TemplateController
 {
 	public function getResponse(): \Http\Response
 	{

@@ -14,6 +14,7 @@ class Request
 	public $route;
 	public $headers;
 	public $method;
+	public $url;
 
 
 	public function __construct($route, $params)

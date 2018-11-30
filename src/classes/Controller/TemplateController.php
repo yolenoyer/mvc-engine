@@ -4,18 +4,10 @@ namespace Controller;
 
 
 /**
- * Classe de base pour tous les contrôleurs.
+ * Classe de base pour tous les contrôleurs renvoyant un template.
  */
-abstract class BaseController
+abstract class TemplateController extends Controller
 {
-	protected $request;
-
-
-	public function __construct(\Http\Request $request)
-	{
-		$this->request = $request;
-	}
-
 
 	/**
 	 * Renvoie un template processé, contenant les paramètres fournis ainsi qu'un objet 'request'
@@ -62,7 +54,5 @@ abstract class BaseController
 		return new \Http\Response($output, 'text/html', $code);
 	}
 
-
-	public abstract function getResponse(): \Http\Response;
 }
 

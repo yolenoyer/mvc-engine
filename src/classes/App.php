@@ -27,7 +27,7 @@ class App {
 		}
 		return $app;
 	}
-	
+
 
 
 	public static function get(string $prop)
@@ -42,6 +42,18 @@ class App {
 		$getter = $getters[$prop];
 		return $app->$getter();
 	}
+
+
+
+	public static function getVars(): array
+	{
+		$app = self::getInstance();
+		return [
+			'projectpath' => $app->getProjectPath(),
+			'urlRoot' => $app->getUrlRoot(),
+		];
+	}
+
 
 
 
