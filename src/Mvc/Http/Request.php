@@ -1,6 +1,9 @@
 <?php
 
-namespace Http;
+namespace Mvc\Http;
+
+use Mvc\ObjectFromArray;
+use Mvc\App;
 
 
 /**
@@ -24,13 +27,13 @@ class Request
 	 * @param array $url_params      Paramètres de l'url, correspondant aux variables
 	 *                               spécifiques de la route
 	 */
-	public function __construct(\Routing\Route $route, array $url_params)
+	public function __construct(\Mvc\Routing\Route $route, array $url_params)
 	{
 		$this->route = $route;
-		$this->urlParams = new \ObjectFromArray($url_params);
+		$this->urlParams = new ObjectFromArray($url_params);
 		$this->headers = self::generateHeaders();
 		$this->method = $_SERVER['REQUEST_METHOD'];
-		$this->url = \App::get('relativeUrl');
+		$this->url = App::get('relativeUrl');
 		$controller_name = $route->getControllerName();
 		$this->controller = new $controller_name($this);
 	}
@@ -42,7 +45,7 @@ class Request
 	 *
 	 * @return \ObjectFromArray
 	 */
-	public function getRouteControllerParameters(): \ObjectFromArray
+	public function getRouteControllerParameters(): ObjectFromArray
 	{
 		return $this->route->controllerDefinition->getParameters();
 	}
@@ -53,13 +56,13 @@ class Request
 	 *
 	 * @return \ObjectFromArray
 	 */
-	private static function generateHeaders(): \ObjectFromArray
+	private static function generateHeaders(): ObjectFromArray
 	{
 		$headers = [];
 		if (isset($_SERVER['HTTP_ACCEPT'])) {
 			$headers['accept'] = $_SERVER['HTTP_ACCEPT'];
 		}
-		return new \ObjectFromArray($headers);
+		return new ObjectFromArray($headers);
 	}
 }
 

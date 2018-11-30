@@ -1,6 +1,12 @@
 <?php
 
-namespace Controller;
+namespace Mvc\Controller;
+
+use \Mvc\ObjectFromArray;
+use \Mvc\Http\Response;
+use \Mvc\App;
+// TODO:
+// use \Mvc\Templating\Processor;
 
 
 /**
@@ -24,12 +30,12 @@ abstract class TemplateController extends Controller
 		$params['request'] = $this->request;
 
 		$params['app'] = [
-			'project_path' => \App::get('projectPath'),
-			'url_root' => \App::get('urlRoot'),
+			'project_path' => App::get('projectPath'),
+			'url_root' => App::get('urlRoot'),
 		];
 
-		$params = new \ObjectFromArray($params);
-		$processor = \Templating\Processor::getInstance();
+		$params = new ObjectFromArray($params);
+		$processor = \Mvc\Templating\Processor::getInstance();
 		$output = $processor->generate($template_name, $params);
 
 		return $output;
@@ -43,15 +49,15 @@ abstract class TemplateController extends Controller
 	 * @param array $params          Paramètres à fournir au template
 	 * @param int $code              Code à renvoyer
 	 *
-	 * @return \Http\Response
+	 * @return \Mvc\Http\Response
 	 */
 	protected function getTemplateResponse(
 		string $template_name,
 		array $params=[],
 		int $code=200
-	): \Http\Response {
+	): Response {
 		$output = $this->getTemplateOutput($template_name, $params);
-		return new \Http\Response($output, 'text/html', $code);
+		return new Response($output, 'text/html', $code);
 	}
 
 }

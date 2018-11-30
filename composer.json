@@ -8,6 +8,9 @@
     ],
     "require": {},
 	"autoload": {
-		"psr-4": { "": "src/classes" }
+		"psr-4": {
+			"Mvc\\": "src/mvc",
+			"App\\": "src/app"
+		}
 	}
 }

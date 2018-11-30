@@ -1,5 +1,8 @@
 <?php
 
+namespace Mvc;
+
+
 /**
  * Permet de récupérer des informations globales sur le projet (et l'url en cours).
  */

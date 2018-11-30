@@ -1,6 +1,9 @@
 <?php
 
-namespace Templating;
+namespace Mvc\Templating;
+
+use \Mvc\ObjectFromArray;
+use \Mvc\App;
 
 
 class Processor
@@ -19,7 +22,7 @@ class Processor
 	static function getInstance(): Processor {
 		static $instance = null;
 		if (is_null($instance)) {
-			$instance = new Processor(\App::get('projectPath') . '/src/views');
+			$instance = new Processor(App::get('projectPath') . '/src/App/views'); // TODO!!!
 		}
 		return $instance;
 	}
@@ -46,7 +49,7 @@ class Processor
 	 *
 	 * @return string
 	 */
-	public static function process(string $output, \ObjectFromArray $params)
+	public static function process(string $output, ObjectFromArray $params)
 	{
 		return preg_replace_callback('/\[\[([^[]*)\]\]/', function($matches) use($params) {
 			$tag = trim($matches[1]);
@@ -72,7 +75,7 @@ class Processor
 	 *
 	 * @return string
 	 */
-	function generate(string $template_name, \ObjectFromArray $params): string
+	function generate(string $template_name, ObjectFromArray $params): string
 	{
 		ob_start();
 		require $this->getTemplateFile($template_name);

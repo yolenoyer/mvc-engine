@@ -1,6 +1,8 @@
 <?php
 
-namespace Routing;
+namespace Mvc\Routing;
+
+use \Mvc\ObjectFromArray;
 
 
 /**
@@ -36,7 +38,7 @@ class ControllerDefinition
 			throw new Exception("Routeur: erreur de configuration");
 		}
 
-		$this->parameters = new \ObjectFromArray($parameters);
+		$this->parameters = new ObjectFromArray($parameters);
 	}
 
 
@@ -51,7 +53,7 @@ class ControllerDefinition
 	/*
 	 * Getter for parameters
 	 */
-	public function getParameters(): \ObjectFromArray
+	public function getParameters(): ObjectFromArray
 	{
 		return $this->parameters;
 	}

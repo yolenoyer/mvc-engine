@@ -1,6 +1,8 @@
 <?php
 
-namespace Routing;
+namespace Mvc\Routing;
+
+use \Mvc\Http\Request;
 
 
 /**
@@ -70,7 +72,7 @@ class Route
 			}
 		}
 
-		return new \Http\Request($this, $url_params);
+		return new Request($this, $url_params);
 	}
 
 

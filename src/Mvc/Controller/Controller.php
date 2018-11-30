@@ -1,6 +1,9 @@
 <?php
 
-namespace Controller;
+namespace Mvc\Controller;
+
+use \Mvc\Http\Request;
+use \Mvc\Http\Response;
 
 
 /**
@@ -15,13 +18,13 @@ abstract class Controller
 	protected $routeParameters;
 
 
-	public function __construct(\Http\Request $request)
+	public function __construct(Request $request)
 	{
 		$this->request = $request;
 		$this->routeParameters = $request->getRouteControllerParameters();
 	}
 
 
-	public abstract function getResponse(): \Http\Response;
+	public abstract function getResponse(): Response;
 }
 

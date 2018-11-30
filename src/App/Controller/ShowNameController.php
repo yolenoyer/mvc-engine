@@ -1,11 +1,14 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
+
+use \Mvc\Controller\TemplateController;
+use \Mvc\Http\Response;
 
 
 class ShowNameController extends TemplateController
 {
-	public function getResponse(): \Http\Response
+	public function getResponse(): Response
 	{
 		return $this->getTemplateResponse('show-name', [
 			'firstname' => $_POST['firstname'] ?? 'Anonyme',
