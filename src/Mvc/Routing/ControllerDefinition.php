@@ -24,20 +24,22 @@ class ControllerDefinition
 	 *     - une chaîne simple contenant le nom d'un contrôleur
 	 *     - un tableau contenant le nom d'un contrôleur et une liste de paramètres à fournir au
 	 *       contrôleur
+	 * @param string $controller_namespace  Namespace du controlleur
 	 */
-	public function __construct($definition)
+	public function __construct($definition, string $controller_namespace='')
 	{
 		$parameters = [];
 
 		if (is_string($definition)) {
-			$this->name = $definition;
+			$name = $definition;
 		} elseif (is_array($definition)) {
-			$this->name = $definition[0];
-			$parameters = $definition[1] ?? [];
+			$name = $definition['controller'];
+			$parameters = $definition['parameters'] ?? [];
 		} else {
 			throw new Exception("Routeur: erreur de configuration");
 		}
 
+		$this->name = "$controller_namespace\\$name";
 		$this->parameters = new ObjectFromArray($parameters);
 	}
 

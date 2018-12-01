@@ -11,11 +11,16 @@ class Router extends \Mvc\Routing\Router
 	public function __construct()
 	{
 		parent::__construct([
-			'/'              => '\App\Controller\HomeController',
-			'/show-name'     => '\App\Controller\ShowNameController',
-			'/show-name/:id' => '\App\Controller\ShowNameController',
-			'/test'          => [ '\App\Controller\ShowNameController', [ 'template' => 'mypage' ] ],
-		]);
+				'/'              => 'HomeController',
+				'/show-name'     => 'ShowNameController',
+				'/show-name/:id' => 'ShowNameController',
+				'/test'          => [
+					'controller' => 'ShowNameController',
+					'parameters' => [ 'template' => 'mypage' ]
+				],
+			],
+			'\App\Controller'
+		);
 	}
 }
 

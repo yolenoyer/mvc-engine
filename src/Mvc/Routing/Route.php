@@ -22,10 +22,10 @@ class Route
 	 * @param $controller_definition  Définition du contrôleur à utiliser (chaine, ou tableau
 	 *      si l'on veut fournir des paramètres au contrôleur)
 	 */
-	public function __construct(string $templateUrl, $controller_definition)
+	public function __construct(string $templateUrl, $controller_definition, string $controller_namespace='')
 	{
 		$this->setTemplateUrl($templateUrl);
-		$this->controllerDefinition = new ControllerDefinition($controller_definition);
+		$this->controllerDefinition = new ControllerDefinition($controller_definition, $controller_namespace);
 	}
 
 

@@ -15,10 +15,11 @@ class Router
 	 * Constructeur.
 	 *
 	 * @param array|null $routes  Routes initiales à ajouter avec addRoutes()
+	 * @param string $controller_namespace  Namespace du controlleur
 	 */
-	public function __construct(array $routes=null) {
+	public function __construct(array $routes=null, string $controller_namespace='') {
 		if (!is_null($routes)) {
-			$this->addRoutes($routes);
+			$this->addRoutes($routes, $controller_namespace);
 		}
 	}
 
@@ -27,11 +28,12 @@ class Router
 	 * Ajoute plusieurs nouvelles routes.
 	 *
 	 * @param array $routes
+	 * @param string $controller_namespace  Namespace du controlleur
 	 */
-	public function addRoutes(array $routes): Router
+	public function addRoutes(array $routes, string $controller_namespace=''): Router
 	{
-		foreach ($routes as $r => $c) {
-			$this->addRoute($r, $c);
+		foreach ($routes as $route => $controller_definition) {
+			$this->addRoute($route, $controller_definition, $controller_namespace);
 		}
 		return $this;
 	}
@@ -40,12 +42,13 @@ class Router
 	/**
 	 * Ajoute une nouvelle route.
 	 *
-	 * @param string $route
+	 * @param string $route  Url
 	 * @param array|string $controller_definition
+	 * @param string $controller_namespace  Namespace du controlleur
 	 */
-	public function addRoute($route, $controller_definition): Router
+	public function addRoute(string $route, $controller_definition, string $controller_namespace=''): Router
 	{
-		$this->routes[] = new Route($route, $controller_definition);
+		$this->routes[] = new Route($route, $controller_definition, $controller_namespace);
 		return $this;
 	}
 	
