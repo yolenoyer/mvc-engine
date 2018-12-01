@@ -3,6 +3,7 @@
 namespace Mvc\Routing;
 
 use \Mvc\ObjectFromArray;
+use \Mvc\Assert;
 
 
 /**
@@ -39,7 +40,13 @@ class ControllerDefinition
 			throw new Exception("Routeur: erreur de configuration");
 		}
 
-		$this->name = "$controller_namespace\\$name";
+		Assert::mustBeNotEmpty($name, "Router: empty controller name");
+		if ($name[0] == '\\') {
+			$this->name = $name;
+		} else {
+			$this->name = "$controller_namespace\\$name";
+		}
+
 		$this->parameters = new ObjectFromArray($parameters);
 	}
 

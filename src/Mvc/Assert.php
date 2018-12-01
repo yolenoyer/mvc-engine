@@ -42,7 +42,19 @@ class Assert
 	 */
 	public static function mustBeNotNull($value, string $message)
 	{
-		self::mustBeFalse(is_null($value), $message);
+		self::mustBeTrue(!is_null($value), $message);
+	}
+
+
+	/**
+	 * S'assure que la chaine indiquée n'est pas vide.
+	 *
+	 * @param string $value    Chaine à vérifier
+	 * @param string $message  Message à transmettre en cas d'exception
+	 */
+	public static function mustBeNotEmpty(string $value, string $message)
+	{
+		self::mustBeTrue($value !== '', $message);
 	}
 
 }
