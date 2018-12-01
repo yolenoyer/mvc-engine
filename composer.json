@@ -9,8 +9,8 @@
     "require": {},
 	"autoload": {
 		"psr-4": {
-			"Mvc\\": "src/mvc",
-			"App\\": "src/app"
+			"Mvc\\": "src/Mvc",
+			"App\\": "src/App"
 		}
 	}
 }
