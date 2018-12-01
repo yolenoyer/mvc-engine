@@ -2,6 +2,8 @@
 
 namespace Mvc;
 
+use \Mvc\Assert;
+
 
 /**
  * Permet un accès global à l'application (configuration, et autre futurement).
@@ -24,7 +26,62 @@ class Container
 		}
 		return $container;
 	}
-	
+
+
+	/**
+	 * Vérifie l'existence d'un paramètre.
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public static function hasParameter(string $key): bool
+	{
+		$parameters = self::getParameters();
+		return isset($parameters[$key]);
+	}
+
+
+
+	/**
+	 * Renvoie une valeur de configuration, ou null si non-trouvé.
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed|null
+	 */
+	public static function getParameter(string $key)
+	{
+		$container = self::getInstance();
+		return $container->parameters[$key] ?? null;
+	}
+
+
+	/**
+	 * Renvoie une valeur de configuration, ou pousse une exception si non-trouvé.
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public static function getMandatoryParameter(string $key)
+	{
+		self::assertHasParameter($key);
+		$parameters = self::getParameters();
+		return $parameters[$key];
+	}
+
+
+	/**
+	 * Renvoie l'ensemble des paramètres.
+	 *
+	 * @return array
+	 */
+	public static function getParameters(): array
+	{
+		$container = self::getInstance();
+		return $container->parameters;
+	}
 
 
 	/**
@@ -35,10 +92,11 @@ class Container
 	 *
 	 * @return Container  Pour chainage
 	 */
-	public function setParameter(string $key, $value)
+	public static function setParameter(string $key, $value)
 	{
-		$this->parameters[$key] = $value;
-		return $this;
+		$container = self::getInstance();
+		$container->parameters[$key] = $value;
+		return $container;
 	}
 
 
@@ -49,25 +107,26 @@ class Container
 	 *
 	 * @return Container  Pour chainage
 	 */
-	public function setParameters(array $parameters)
+	public static function setParameters(array $parameters)
 	{
-		$this->parameters = array_merge($this->parameters, $parameters);
-		return $this;
+		$container = self::getInstance();
+		$container->parameters = array_merge($container->parameters, $parameters);
+		return $container;
 	}
-	
 
 
 	/**
-	 * Renvoie une valeur de configuation.
+	 * Vérifie qu'un paramètre existe ou envoie une exception.
 	 *
 	 * @param string $key
-	 *
-	 * @return mixed|null
 	 */
-	public function getParameter(string $key)
+	public static function assertHasParameter(string $key)
 	{
-		return $this->parameters[$key] ?? null;
+		Assert::isTrue(
+			self::hasParameter($key),
+			"Missing mandatory parameter in configuration: '$key'"
+		);
 	}
-	
+
 }
 

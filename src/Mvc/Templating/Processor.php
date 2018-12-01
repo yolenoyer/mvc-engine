@@ -4,6 +4,7 @@ namespace Mvc\Templating;
 
 use \Mvc\ObjectFromArray;
 use \Mvc\App;
+use \Mvc\Container;
 
 
 class Processor
@@ -26,8 +27,7 @@ class Processor
 	static function getInstance(): Processor {
 		static $instance = null;
 		if (is_null($instance)) {
-			$container = \Mvc\Container::getInstance();
-			$templates_dir = $container->getParameter('templating.templateDir');
+			$templates_dir = Container::getMandatoryParameter('templating.templateDir');
 			$instance = new Processor($templates_dir);
 		}
 		return $instance;

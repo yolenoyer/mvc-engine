@@ -4,7 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 
 // Configuration globale:
-require "config.php";
+require "mvc-config.php";
 
 // Création du routeur:
 $router = new \App\Router();

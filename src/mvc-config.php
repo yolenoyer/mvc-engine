@@ -2,12 +2,12 @@
 
 use \Mvc\App;
 
+
 (function() {
 
 	$projectPath = App::get('projectPath');
 
-	$container = \Mvc\Container::getInstance();
-	$container->setParameters([
+	\Mvc\Container::setParameters([
 		'templating.templateDir' => "$projectPath/src/App/views",
 	]);
 
