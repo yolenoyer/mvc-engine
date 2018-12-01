@@ -54,7 +54,7 @@ class Processor
 	 *
 	 * @return string
 	 */
-	public static function process(string $output, ObjectFromArray $params)
+	public static function processString(string $output, ObjectFromArray $params)
 	{
 		return preg_replace_callback('/\[\[([^[]*)\]\]/', function($matches) use($params) {
 			$tag = trim($matches[1]);
@@ -80,7 +80,7 @@ class Processor
 	 *
 	 * @return string
 	 */
-	function generate(string $template_name, ObjectFromArray $params): string
+	function process(string $template_name, ObjectFromArray $params): string
 	{
 		ob_start();
 		require $this->getTemplateFile($template_name);
@@ -93,7 +93,7 @@ class Processor
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$output = self::process($output, $params);
+		$output = self::processString($output, $params);
 
 		return $output;
 	}

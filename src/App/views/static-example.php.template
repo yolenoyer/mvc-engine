@@ -1,0 +1,4 @@
+<div style="color:[[ css_color ]]">
+	Ce texte est affiché en [[ color_name ]].
+</div>
+Mot: [[ request.urlParams.word ]]

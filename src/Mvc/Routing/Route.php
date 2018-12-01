@@ -30,6 +30,17 @@ class Route
 
 
 	/**
+	 * Renvoie une représentation chainée de la route.
+	 *
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return $this->templateUrl;
+	}
+
+
+	/**
 	 * Définit le template d'url pour cette route.
 	 *
 	 * @param string $templateUrl  Ex: /products/cars/:id

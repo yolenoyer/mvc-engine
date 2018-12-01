@@ -36,7 +36,7 @@ abstract class TemplateController extends Controller
 
 		$params = new ObjectFromArray($params);
 		$processor = \Mvc\Templating\Processor::getInstance();
-		$output = $processor->generate($template_name, $params);
+		$output = $processor->process($template_name, $params);
 
 		return $output;
 	}

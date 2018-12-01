@@ -4,7 +4,7 @@ namespace Mvc;
 
 
 /**
- * Crée un object à partir d'un tableau associatif.
+ * Crée un objet à partir d'un tableau associatif.
  * Chaque clé du tableau est accessible via une propriété homonyme.
  */
 class ObjectFromArray
@@ -21,12 +21,13 @@ class ObjectFromArray
 		if (isset($this->array[$key])) {
 			return $this->array[$key];
 		}
+		return null;
 	}
-	
+
 	public function __set($key, $value)
 	{
 		$this->array[$key] = $value;
 	}
-	
+
 }
 

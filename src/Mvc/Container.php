@@ -122,7 +122,7 @@ class Container
 	 */
 	public static function assertHasParameter(string $key)
 	{
-		Assert::isTrue(
+		Assert::mustBeTrue(
 			self::hasParameter($key),
 			"Missing mandatory parameter in configuration: '$key'"
 		);
