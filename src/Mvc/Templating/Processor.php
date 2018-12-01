@@ -3,7 +3,6 @@
 namespace Mvc\Templating;
 
 use \Mvc\ObjectFromArray;
-use \Mvc\App;
 use \Mvc\Container;
 
 

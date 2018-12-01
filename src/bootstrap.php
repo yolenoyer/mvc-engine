@@ -9,7 +9,7 @@ require "mvc-config.php";
 // Création du routeur:
 $router = new \App\Router();
 
-$url = \Mvc\App::get('relativeUrl');
+$url = \Mvc\Util::getRelativeUrl();
 
 // Recherche de la route appropriée:
 $request = $router->find($url);

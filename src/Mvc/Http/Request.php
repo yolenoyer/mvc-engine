@@ -3,7 +3,6 @@
 namespace Mvc\Http;
 
 use Mvc\ObjectFromArray;
-use Mvc\App;
 
 
 /**
@@ -33,7 +32,7 @@ class Request
 		$this->urlParams = new ObjectFromArray($url_params);
 		$this->headers = self::generateHeaders();
 		$this->method = $_SERVER['REQUEST_METHOD'];
-		$this->url = App::get('relativeUrl');
+		$this->url = \Mvc\Util::getRelativeUrl();
 		$controller_name = $route->getControllerName();
 		$this->controller = new $controller_name($this);
 	}

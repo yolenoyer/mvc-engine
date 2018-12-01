@@ -4,7 +4,7 @@ namespace Mvc\Controller;
 
 use \Mvc\ObjectFromArray;
 use \Mvc\Http\Response;
-use \Mvc\App;
+use \Mvc\Util;
 // TODO:
 // use \Mvc\Templating\Processor;
 
@@ -30,8 +30,8 @@ abstract class TemplateController extends Controller
 		$params['request'] = $this->request;
 
 		$params['app'] = [
-			'project_path' => App::get('projectPath'),
-			'url_root' => App::get('urlRoot'),
+			'project_path' => Util::getProjectPath(),
+			'url_root' => Util::getUrlRoot(),
 		];
 
 		$params = new ObjectFromArray($params);
