@@ -16,7 +16,20 @@ $country->set('population', 78);
 
 echo '<pre>';
 
-print_r($country->toArray());
+
+$myschema = new \Mvc\Model\Schema('myschema', [
+	'x' => [ 'type' => 'integer' ],
+	'y' => [ 'type' => 'integer' ],
+	'name' => [ 'type' => 'string' ],
+]);
+
+$o = $myschema->createInstance([
+	'name' => 'hello',
+	'x' => 10,
+	'y' => 20,
+]);
+
+print_r($o->toArray());
 
 die;
 

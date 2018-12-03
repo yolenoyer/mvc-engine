@@ -17,9 +17,10 @@ class Schema
 	/**
 	 * Constructeur.
 	 */
-	public function __construct(string $name)
+	public function __construct(string $name, array $definitions=[])
 	{
 		$this->name = $name;
+		$this->addProperties($definitions);
 	}
 
 
@@ -34,6 +35,22 @@ class Schema
 	public function addProperty(string $name, array $definition): Schema
 	{
 		array_push($this->properties, new SchemaProperty($this, $name, $definition));
+		return $this;
+	}
+
+
+	/**
+	 * Ajoute plusieurs propriétés à la fois.
+	 *
+	 * @param array $definitions
+	 *
+	 * @return Schema  Pour chainage
+	 */
+	public function addProperties(array $definitions): Schema
+	{
+		foreach ($definitions as $prop_name => $definition) {
+			$this->addProperty($prop_name, $definition);
+		}
 		return $this;
 	}
 
