@@ -103,7 +103,7 @@ class Util
 	 * @return string
 	 */
 	public static function arrayToXml($data): string {
-		$xml_data = new SimpleXMLElement('<?xml version="1.0"?><data></data>');
+		$xml_data = new \SimpleXMLElement('<?xml version="1.0"?><data></data>');
 		self::_array_to_xml($data, $xml_data);
 		return $xml_data->asXML();
 	}

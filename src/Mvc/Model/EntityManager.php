@@ -20,6 +20,20 @@ class EntityManager
 	public function __construct(Schema $schema)
 	{
 		$this->schema = $schema;
+
+		// Données factices:
+		$this->createEntity([
+			'name' => 'Espagne',
+			'population' => 50000000,
+			'capital' => 'Madrid',
+			'language' => 'Espagnol',
+		]);
+		$this->createEntity([
+			'name' => 'France',
+			'population' => 65000000,
+			'capital' => 'Paris',
+			'language' => 'Français',
+		]);
 	}
 
 

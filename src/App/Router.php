@@ -21,11 +21,11 @@ class Router extends \Mvc\Routing\Router
 
 		$this->addRoutes(
 			[
-				'/country' =>
+				'/country/:id' =>
 					[
 						'controller' => 'RestController',
 						'parameters' => [
-							'model' => '\App\Model\Country',
+							'schema' => '\App\Model\CountrySchema',
 						]
 					],
 				'/rouge' =>
