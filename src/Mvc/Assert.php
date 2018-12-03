@@ -35,6 +35,18 @@ class Assert
 
 
 	/**
+	 * S'assure que la valeur indiquée est nulle.
+	 *
+	 * @param mixed $value     Valeur à vérifier
+	 * @param string $message  Message à transmettre en cas d'exception
+	 */
+	public static function mustBeNull($value, string $message)
+	{
+		self::mustBeTrue(is_null($value), $message);
+	}
+
+
+	/**
 	 * S'assure que la valeur indiquée n'est pas nulle.
 	 *
 	 * @param mixed $value     Valeur à vérifier

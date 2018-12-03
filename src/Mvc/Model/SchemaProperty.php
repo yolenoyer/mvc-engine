@@ -12,7 +12,7 @@ class SchemaProperty
 {
 	protected $name;
 	protected $type;
-	protected $_isId;
+	protected $_isPrimaryKey;
 	protected $schema;
 
 
@@ -27,7 +27,7 @@ class SchemaProperty
 	{
 		$this->name = $name;
 		$this->type = $definition['type'] ?? 'string';
-		$this->_isId = !!($definition['isId'] ?? false);
+		$this->_isPrimaryKey = !!($definition['primary'] ?? false);
 		$this->schema = $schema;
 	}
 
@@ -42,22 +42,6 @@ class SchemaProperty
 		return "{$this->schema->getName()}->{$this->name}";
 	}
 	
-
-
-	/**
-	 * Envoie une exception si la valeur donnée n'est pas valide pour cette propriété.
-	 *
-	 * @param mixed $value
-	 */
-	public function mustBeValidValue($value)
-	{
-		$type = gettype($value);
-		Assert::mustHaveType($value, $this->type,
-			"Wrong type ('$type') for the property '{$this}': must be '{$this->type}'"
-		);
-	}
-	
-
 
 	/*
 	 * Getter for name
@@ -94,19 +78,19 @@ class SchemaProperty
 	}
 
 	/*
-	 * Getter for isId
+	 * Getter for isPrimaryKey
 	 */
-	public function isId(): bool
+	public function isPrimaryKey(): bool
 	{
-		return $this->_isId;
+		return $this->_isPrimaryKey;
 	}
 	
 	/*
-	 * Setter for isId
+	 * Setter for isPrimaryKey
 	 */
-	public function setIsId($isId): SchemaProperty
+	public function setIsPrimaryKey($isPrimaryKey): SchemaProperty
 	{
-		$this->_isId = $isId;
+		$this->_isPrimaryKey = $isPrimaryKey;
 		return $this;
 	}
 
@@ -127,5 +111,20 @@ class SchemaProperty
 		return $this;
 	}
 	
+
+	/**
+	 * Envoie une exception si la valeur donnée n'est pas valide pour cette propriété.
+	 *
+	 * @param mixed $value
+	 */
+	public function mustBeValidValue($value)
+	{
+		$type = gettype($value);
+		Assert::mustHaveType($value, $this->type,
+			"Wrong type ('$type') for the property '{$this}': must be '{$this->type}'"
+		);
+	}
+	
+
 }
 

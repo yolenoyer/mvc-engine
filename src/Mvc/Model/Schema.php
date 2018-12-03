@@ -12,6 +12,7 @@ class Schema
 {
 	protected $name;
 	protected $properties = [];
+	protected $primaryKey = null;
 
 
 	/**
@@ -25,6 +26,20 @@ class Schema
 
 
 	/**
+	 * Représentation chainée.
+	 *
+	 * @param ):string
+	 *
+	 * @return 
+	 */
+	public function __toString():string
+	{
+		return $this->name;
+	}
+	
+
+
+	/**
 	 * Ajoute une propriété dans la définition du schéma.
 	 *
 	 * @param string $name       Nom de la nouvelle propriété
@@ -34,7 +49,17 @@ class Schema
 	 */
 	public function addProperty(string $name, array $definition): Schema
 	{
-		array_push($this->properties, new SchemaProperty($this, $name, $definition));
+		$property = new SchemaProperty($this, $name, $definition);
+		array_push($this->properties, $property);
+
+		// Définition éventuelle de la propriété id:
+		if ($property->isPrimaryKey()) {
+			Assert::mustBeNull($this->primaryKey,
+				"Error in schema construction ('{$this->name}'): multiple primary keys"
+			);
+			$this->primaryKey = $property;
+		}
+
 		return $this;
 	}
 
@@ -120,7 +145,7 @@ class Schema
 	 *
 	 * @return Entiy
 	 */
-	public function createInstance(array $data): Entity
+	public function createEntity(array $data): Entity
 	{
 		return new Entity($this, $data);
 	}
@@ -147,10 +172,29 @@ class Schema
 	/*
 	 * Getter for name
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
+
+	/*
+	 * Getter for primaryKey
+	 */
+	public function getPrimaryKey()
+	{
+		return $this->primaryKey;
+	}
+
+
+	/**
+	 * S'assure que le schéma possède une clé primaire.
+	 */
+	public function mustHavePrimaryKey()
+	{
+		Assert::mustBeNotNull($this->primaryKey,
+			"The schema '{$this}' must have a primary key property"
+		);
+	}
 }
 

@@ -5,31 +5,24 @@ require __DIR__.'/../vendor/autoload.php';
 
 $country_schema = new \App\Model\CountrySchema();
 
-$country = $country_schema->createInstance([
+
+$em = new \Mvc\Model\EntityManager($country_schema);
+$em->createEntity([
 	'name' => 'Espagne',
 	'population' => 50000000,
 	'capital' => 'Madrid',
 	'language' => 'Espagnol',
 ]);
-
-$country->set('population', 78);
-
-echo '<pre>';
-
-
-$myschema = new \Mvc\Model\Schema('myschema', [
-	'x' => [ 'type' => 'integer' ],
-	'y' => [ 'type' => 'integer' ],
-	'name' => [ 'type' => 'string' ],
+$em->createEntity([
+	'name' => 'Grèce',
+	'population' => 35000000,
+	'capital' => 'Athènes',
+	'language' => 'Grec',
 ]);
 
-$o = $myschema->createInstance([
-	'name' => 'hello',
-	'x' => 10,
-	'y' => 20,
-]);
 
-print_r($o->toArray());
+$entity = $em->findEntity('Grèce');
+var_dump($entity->toArray());
 
 die;
 

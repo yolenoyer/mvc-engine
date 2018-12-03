@@ -68,6 +68,20 @@ class Entity
 		$this->data[$prop_name] = $value;
 		return $this;
 	}
+
+
+	/**
+	 * Renvoie la valeur contenue dans la clé primaire de l'entité.
+	 *
+	 * @return mixed
+	 */
+	public function getId()
+	{
+		$this->schema->mustHavePrimaryKey();
+		$id_prop = $this->schema->getPrimaryKey();
+		$prop_name = $id_prop->getName();
+		return $this->data[$prop_name];
+	}
 	
 
 	/**
