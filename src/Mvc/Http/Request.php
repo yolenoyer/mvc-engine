@@ -30,7 +30,7 @@ class Request
 	{
 		$this->route = $route;
 		$this->urlParams = new ObjectFromArray($url_params);
-		$this->headers = self::generateHeaders();
+		$this->headers = getallheaders();
 		$this->method = $_SERVER['REQUEST_METHOD'];
 		$this->url = \Mvc\Util::getRelativeUrl();
 		$controller_name = $route->getControllerName();
@@ -43,7 +43,7 @@ class Request
 	 *
 	 * @return string
 	 */
-	public static function getRawBody(): string
+	public static function getBody(): string
 	{
 		return file_get_contents('php://input');
 	}
@@ -60,19 +60,5 @@ class Request
 		return $this->route->controllerDefinition->getParameters();
 	}
 
-
-	/**
-	 * Renvoie des informations simplifiées sur les headers de la requête.
-	 *
-	 * @return \ObjectFromArray
-	 */
-	private static function generateHeaders(): ObjectFromArray
-	{
-		$headers = [];
-		if (isset($_SERVER['HTTP_ACCEPT'])) {
-			$headers['accept'] = $_SERVER['HTTP_ACCEPT'];
-		}
-		return new ObjectFromArray($headers);
-	}
 }
 

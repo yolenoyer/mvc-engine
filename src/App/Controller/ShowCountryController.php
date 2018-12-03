@@ -20,7 +20,7 @@ class ShowCountryController extends TemplateController
 	public function getResponse(): Response
 	{
 		$id = $this->request->urlParams->id;
-		$entity = $this->em->findEntity($id);
+		$entity = $this->em->find($id);
 		if (is_null($entity)) {
 			return new Response('Pays non-trouvé...', 'text/html', 404);
 		}

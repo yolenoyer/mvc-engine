@@ -20,11 +20,15 @@ class Database
 	 */
 	public function __construct(array $connection)
 	{
-		$dsn = "{$connection['type']}:host={$connection['host']};dbname={$connection['dbname']}";
-
-		$this->pdo = new \PDO($dsn, $connection['username'], $connection['password'], [
-			\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
-		]);
+		try {
+			$dsn = "{$connection['type']}:host={$connection['host']};dbname={$connection['dbname']}";
+			$this->pdo = new \PDO($dsn, $connection['username'], $connection['password'], [
+				\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+			]);
+		}
+		catch (\PDOException $e) {
+			throw new \Mvc\Exception("Connection to database failed.");
+		}
 	}
 
 

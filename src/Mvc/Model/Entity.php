@@ -31,32 +31,6 @@ class Entity
 
 
 	/**
-	 * Persite l'entité.
-	 */
-	public function persist()
-	{
-		$schema = $this->schema;
-
-		$db = \Mvc\Database\Database::getInstance();
-		$pdo = $db->getPdo();
-
-		$prop_names = $schema->getPropertyNames();
-		$prop_list = join(',', $prop_names);
-		$placeholders = join(',', array_fill(0, count($prop_names), '?'));
-
-		$prepared_query = "INSERT INTO `{$schema->getName()}` ($prop_list) VALUES($placeholders)";
-		$stmt = $pdo->prepare($prepared_query);
-
-		$params = [];
-		foreach ($prop_names as $prop_name) {
-			array_push($params, $this->get($prop_name));
-		}
-
-		$stmt->execute($params);
-	}
-
-
-	/**
 	 * Renvoie le modèle sous forme de tableau associatif.
 	 *
 	 * @return array

@@ -1,0 +1,5 @@
+[03-Dec-2018 20:59:43 Europe/Paris] PHP Warning:  require(/tmp/v15lWO1/../vendor/autoload.php): failed to open stream: No such file or directory in /tmp/v15lWO1/12 on line 3
+[03-Dec-2018 20:59:43 Europe/Paris] PHP Fatal error:  require(): Failed opening required '/tmp/v15lWO1/../vendor/autoload.php' (include_path='.:/usr/share/pear:/home/io/prog/php/includes') in /tmp/v15lWO1/12 on line 3
+[03-Dec-2018 20:59:49 Europe/Paris] PHP Parse error:  syntax error, unexpected 'getBestSupportedMimeType' (T_STRING), expecting function (T_FUNCTION) or const (T_CONST) in /srv/http/private/mvc-engine/src/Mvc/Http/Response.php on line 174
+[03-Dec-2018 21:00:10 Europe/Paris] PHP Notice:  Undefined index: HTTP_ACCEPT in /srv/http/private/mvc-engine/src/Mvc/Http/Response.php on line 179
+[03-Dec-2018 21:01:12 Europe/Paris] PHP Notice:  Undefined index: HTTP_ACCEPT in /srv/http/private/mvc-engine/src/Mvc/Http/Response.php on line 179

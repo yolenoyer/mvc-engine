@@ -9,7 +9,8 @@ namespace Mvc\Model;
 class EntityManager
 {
 	protected $schema;
-	protected $entities = [];
+	protected $db;
+	protected $pdo;
 
 
 	/**
@@ -20,19 +21,49 @@ class EntityManager
 	public function __construct(Schema $schema)
 	{
 		$this->schema = $schema;
+		$this->db = \Mvc\Database\Database::getInstance();
+		$this->pdo = $this->db->getPdo();
 	}
 
 
 	/**
-	 * Crée une nouvelle entité, qui doit correspondre au schéma du manager.
+	 * Crée une nouvelle entité, avec les données fournies qui doivent correspondre au schéma du
+	 * manager.
 	 *
-	 * @param array $data  Données rattachées à la nouvelle entité
+	 * @param array $data  Données à rattacher à la nouvelle entité
+	 *
+	 * @return Entity
 	 */
-	public function createEntity(array $data): Entity
+	public function newEntity(array $data): Entity
 	{
-		$entity = $this->schema->createEntity($data);
-		array_push($this->entities, $entity);
-		return $entity;
+		return $this->schema->newEntity($data);
+	}
+
+
+	/**
+	 * Persiste une entité dans la base de données.
+	 *
+	 * @param Entity $entity
+	 */
+	public function persist(Entity $entity)
+	{
+		$schema = $this->schema;
+
+		$prop_names = $schema->getPropertyNames();
+		$prop_list = join(',', array_map(function($prop_name) {
+			return "`$prop_name`";
+		}, $prop_names));
+		$placeholders = join(',', array_fill(0, count($prop_names), '?'));
+
+		$prepared_query = "INSERT INTO `{$schema->getName()}` ($prop_list) VALUES($placeholders)";
+		$stmt = $this->pdo->prepare($prepared_query);
+
+		$params = [];
+		foreach ($prop_names as $prop_name) {
+			array_push($params, $entity->get($prop_name));
+		}
+
+		$stmt->execute($params);
 	}
 
 
@@ -43,28 +74,24 @@ class EntityManager
 	 *
 	 * @return Entity|null
 	 */
-	public function findEntity($id)
+	public function find($id)
 	{
 		$schema = $this->schema;
 		$primary = $schema->getPrimaryKey()->getName();
 
-		$db = \Mvc\Database\Database::getInstance();
-		$pdo = $db->getPdo();
-
 		$prepared_query = "SELECT * FROM `{$schema->getName()}` WHERE `$primary`=?";
-		$stmt = $pdo->prepare($prepared_query);
+		$stmt = $this->pdo->prepare($prepared_query);
 
 		$stmt->execute([ $id ]);
-		$fetch = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-		if (empty($fetch)) {
+		$fetch = $stmt->fetch(\PDO::FETCH_ASSOC);
+		if ($fetch === false) {
 			return null;
 		}
-		$data = $fetch[0];
 
-		$schema->convertValues($data);
+		$schema->convertValues($fetch);
 
-		return $this->createEntity($data);
+		return $this->schema->newEntity($fetch);
 	}
-	
+
 }
 

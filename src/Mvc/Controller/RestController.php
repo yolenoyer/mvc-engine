@@ -40,22 +40,33 @@ class RestController extends Controller
 	public function getResponse(): Response
 	{
 		switch ($this->request->method) {
-		case 'GET':
-			$data = $this->em->findEntity($this->id);
-			if (is_null($data)) {
-				return new Response(null, 'application/json', 404);
-			} else {
-				return new Response($data->toArray(), $this->request->headers->accept, 200);
-			}
-		case 'POST':
-			$json = Request::getRawBody();
-			$data = json_decode($json, true);
-			if (!$this->schema->convertValues($data)) {
-				return new Response(null, 'application/json', 400);
-			}
-			$entity = $this->em->createEntity($data);
-			$entity->persist();
-			return new Response(true, 'application/json');
+			case 'GET':
+				$entity = $this->em->find($this->id);
+
+				if (is_null($entity)) {
+					return new Response(null, 'application/json', 404);
+				} else {
+					return new Response($entity->toArray(), $_SERVER['HTTP_ACCEPT'], 200);
+				}
+
+			case 'POST':
+				$json = Request::getBody();
+				$data = json_decode($json, true);
+				if (!$this->schema->convertValues($data)) {
+					return new Response(null, 'application/json', 400);
+				}
+				$entity = $this->em->newEntity($data);
+				$this->em->persist($entity);
+				return new Response(true, 'application/json');
+
+			case 'PUT':
+				return new Response('To be done...', 'text/plain', 418);
+
+			case 'DELETE':
+				return new Response('To be done...', 'text/plain', 418);
+
+			default:
+				return new Response('Unrecognized HTTP method', 'text/plain', 405);
 		}
 	}
 }

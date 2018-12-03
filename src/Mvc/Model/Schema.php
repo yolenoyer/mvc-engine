@@ -145,7 +145,7 @@ class Schema
 	 *
 	 * @return Entiy
 	 */
-	public function createEntity(array $data): Entity
+	public function newEntity(array $data): Entity
 	{
 		return new Entity($this, $data);
 	}
