@@ -14,7 +14,7 @@ class CountrySchema extends Schema
 	 * Constructeur.
 	 */
 	public function __construct() {
-		parent::__construct('Country');
+		parent::__construct('country');
 		$this
 			->addProperty('name', [ 'type' => 'string', 'primary' => true ])
 			->addProperty('population', [ 'type' => 'integer' ])

@@ -5,6 +5,9 @@ namespace Mvc\Model;
 use \Mvc\Assert;
 
 
+/**
+ * Représente une instance de schéma.
+ */
 class Entity
 {
 	protected $schema;
@@ -24,6 +27,32 @@ class Entity
 		foreach ($this->schema->getPropertyNames() as $prop_name) {
 			$this->data[$prop_name] = $data[$prop_name];
 		}
+	}
+
+
+	/**
+	 * Persite l'entité.
+	 */
+	public function persist()
+	{
+		$schema = $this->schema;
+
+		$db = \Mvc\Database\Database::getInstance();
+		$pdo = $db->getPdo();
+
+		$prop_names = $schema->getPropertyNames();
+		$prop_list = join(',', $prop_names);
+		$placeholders = join(',', array_fill(0, count($prop_names), '?'));
+
+		$prepared_query = "INSERT INTO `{$schema->getName()}` ($prop_list) VALUES($placeholders)";
+		$stmt = $pdo->prepare($prepared_query);
+
+		$params = [];
+		foreach ($prop_names as $prop_name) {
+			array_push($params, $this->get($prop_name));
+		}
+
+		$stmt->execute($params);
 	}
 
 
@@ -95,6 +124,6 @@ class Entity
 			"The property '$prop_name' does not exist in the '{$this->schema->getName()}' schema."
 		);
 	}
-	
+
 }
 

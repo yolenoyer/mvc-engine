@@ -56,12 +56,13 @@ abstract class TemplateController extends Controller
 	 */
 	protected function getTemplateResponse(
 		string $template_name,
-		$params=null,
+		$params=[],
 		int $code=200
 	): Response {
-		if (is_null($params)) {
-			$params = new ObjectFromArray([]);
-		};
+		if (is_array($params)) {
+			$params = new ObjectFromArray($params);
+		}
+
 		$output = $this->getTemplateOutput($template_name, $params);
 		return new Response($output, 'text/html', $code);
 	}

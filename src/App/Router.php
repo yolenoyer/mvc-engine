@@ -15,6 +15,11 @@ class Router extends \Mvc\Routing\Router
 				'/'              => 'HomeController',
 				'/show-name'     => 'ShowNameController',
 				'/show-name/:id' => 'ShowNameController',
+				'/pays/:id' =>
+					[
+						'controller' => 'ShowCountryController',
+						'parameters' => [ 'title' => 'Bienvenue!' ]
+					],
 			],
 			'\App\Controller'
 		);
@@ -24,9 +29,12 @@ class Router extends \Mvc\Routing\Router
 				'/country/:id' =>
 					[
 						'controller' => 'RestController',
-						'parameters' => [
-							'schema' => '\App\Model\CountrySchema',
-						]
+						'parameters' => [ 'schema' => '\App\Model\CountrySchema' ]
+					],
+				'/country' =>
+					[
+						'controller' => 'RestController',
+						'parameters' => [ 'schema' => '\App\Model\CountrySchema' ]
 					],
 				'/rouge' =>
 					[

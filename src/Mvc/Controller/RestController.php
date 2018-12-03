@@ -47,7 +47,15 @@ class RestController extends Controller
 			} else {
 				return new Response($data->toArray(), $this->request->headers->accept, 200);
 			}
-			break;
+		case 'POST':
+			$json = Request::getRawBody();
+			$data = json_decode($json, true);
+			if (!$this->schema->convertValues($data)) {
+				return new Response(null, 'application/json', 400);
+			}
+			$entity = $this->em->createEntity($data);
+			$entity->persist();
+			return new Response(true, 'application/json');
 		}
 	}
 }

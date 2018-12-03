@@ -39,6 +39,17 @@ class Request
 
 
 	/**
+	 * Renvoie le corps de la requête.
+	 *
+	 * @return string
+	 */
+	public static function getRawBody(): string
+	{
+		return file_get_contents('php://input');
+	}
+
+
+	/**
 	 * Renvoie les paramètres optionnels donnés au routeur, et destinés à l'initialisation du
 	 * contrôleur.
 	 *

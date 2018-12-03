@@ -20,20 +20,6 @@ class EntityManager
 	public function __construct(Schema $schema)
 	{
 		$this->schema = $schema;
-
-		// Données factices:
-		$this->createEntity([
-			'name' => 'Espagne',
-			'population' => 50000000,
-			'capital' => 'Madrid',
-			'language' => 'Espagnol',
-		]);
-		$this->createEntity([
-			'name' => 'France',
-			'population' => 65000000,
-			'capital' => 'Paris',
-			'language' => 'Français',
-		]);
 	}
 
 
@@ -59,12 +45,25 @@ class EntityManager
 	 */
 	public function findEntity($id)
 	{
-		foreach ($this->entities as $entity) {
-			if ($entity->getId() === $id) {
-				return $entity;
-			}
+		$schema = $this->schema;
+		$primary = $schema->getPrimaryKey()->getName();
+
+		$db = \Mvc\Database\Database::getInstance();
+		$pdo = $db->getPdo();
+
+		$prepared_query = "SELECT * FROM `{$schema->getName()}` WHERE `$primary`=?";
+		$stmt = $pdo->prepare($prepared_query);
+
+		$stmt->execute([ $id ]);
+		$fetch = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+		if (empty($fetch)) {
+			return null;
 		}
-		return null;
+		$data = $fetch[0];
+
+		$schema->convertValues($data);
+
+		return $this->createEntity($data);
 	}
 	
 }

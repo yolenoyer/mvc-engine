@@ -1,0 +1,7 @@
+<h1>[[ title ]]</h1>
+<ul>
+	<li>Nom du pays: [[ country.name ]]</li>
+	<li>Population actuelle: [[ country.population ]]</li>
+	<li>Langue: [[ country.language ]]</li>
+	<li>Capitale: [[ country.capital ]]</li>
+</li>

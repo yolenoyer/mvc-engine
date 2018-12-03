@@ -169,6 +169,27 @@ class Schema
 	}
 
 
+	/**
+	 * Tente de convertir les données fournies vers le bon type.
+	 *
+	 * @param array &$data
+	 *
+	 * @return bool  Renvoie false si échec
+	 */
+	public function convertValues(array &$data)
+	{
+		$success = true;
+		foreach ($this->properties as $property) {
+			$prop_name = $property->getName();
+			$type = $property->getType();
+			if (!isset($data[$prop_name]) || !settype($data[$prop_name], $type)) {
+				$success = false;
+			}
+		}
+		return $success;
+	}
+
+
 	/*
 	 * Getter for name
 	 */
