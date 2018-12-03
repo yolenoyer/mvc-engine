@@ -21,6 +21,13 @@ class Router extends \Mvc\Routing\Router
 
 		$this->addRoutes(
 			[
+				'/country' =>
+					[
+						'controller' => 'RestController',
+						'parameters' => [
+							'model' => '\App\Model\Country',
+						]
+					],
 				'/rouge' =>
 					[
 						'controller' => 'StaticTemplateController',

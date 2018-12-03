@@ -57,5 +57,31 @@ class Assert
 		self::mustBeTrue($value !== '', $message);
 	}
 
+
+	/**
+	 * S'assure qu'une clé existe dans un tableau.
+	 *
+	 * @param array $arr
+	 * @param string $key
+	 * @param string $message
+	 */
+	public static function mustKeyExist(array $arr, string $key, string $message)
+	{
+		self::mustBeTrue(isset($arr[$key]), $message);
+	}
+	
+
+	/**
+	 * S'assure que la valeur donnée possède le bon type.
+	 *
+	 * @param mixed $value
+	 * @param string $type
+	 * @param string $message
+	 */
+	public static function mustHaveType($value, string $type, string $message)
+	{
+		self::mustBeTrue(gettype($value) === $type, $message);
+	}
+	
 }
 

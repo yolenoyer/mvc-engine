@@ -19,7 +19,12 @@ class ObjectFromArray
 	public function __get($key)
 	{
 		if (isset($this->array[$key])) {
-			return $this->array[$key];
+			$value = $this->array[$key];
+			if (is_array($value)) {
+				return new ObjectFromArray($value);
+			} else {
+				return $value;
+			}
 		}
 		return null;
 	}

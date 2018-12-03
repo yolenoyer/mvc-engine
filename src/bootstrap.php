@@ -3,6 +3,24 @@
 require __DIR__.'/../vendor/autoload.php';
 
 
+$country_schema = new \App\Model\CountrySchema();
+
+$country = $country_schema->createInstance([
+	'name' => 'Espagne',
+	'population' => 50000000,
+	'capital' => 'Madrid',
+	'language' => 'Espagnol',
+]);
+
+$country->set('population', 78);
+
+echo '<pre>';
+
+print_r($country->toArray());
+
+die;
+
+
 // Configuration globale:
 require "mvc-config.php";
 
