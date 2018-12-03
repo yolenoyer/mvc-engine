@@ -22,7 +22,7 @@ class ShowCountryController extends TemplateController
 		$id = $this->request->urlParams->id;
 		$entity = $this->em->find($id);
 		if (is_null($entity)) {
-			return new Response('Pays non-trouvé...', 'text/html', 404);
+			return new Response('Pays non-trouvé...', 404, 'text/html');
 		}
 		$params = [
 			'title' => $this->routeParameters->title,

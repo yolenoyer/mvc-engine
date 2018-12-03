@@ -64,7 +64,7 @@ abstract class TemplateController extends Controller
 		}
 
 		$output = $this->getTemplateOutput($template_name, $params);
-		return new Response($output, 'text/html', $code);
+		return new Response($output, $code, 'text/html');
 	}
 
 }

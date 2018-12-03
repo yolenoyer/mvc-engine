@@ -16,8 +16,6 @@ class Response
 	private $code;
 	private $body;
 
-	static $defaultMimeType = 'application/json';
-
 	static $supportedMimeTypes = [
 		'application/json',
 		'text/html',
@@ -33,10 +31,14 @@ class Response
 	 * @param string $accept  Types mime demandés
 	 * @param int $code       Status HTTP
 	 */
-	public function __construct($data, string $accept, int $code=200)
+	public function __construct($data='', int $code=200, $accept=null)
 	{
-		$this->setContent($data, $accept);
 		$this->setCode($code);
+
+		if (is_null($accept)) {
+			$accept = $_SERVER['HTTP_ACCEPT'];
+		}
+		$this->setContent($data, $accept);
 	}
 
 
@@ -118,7 +120,7 @@ class Response
 	{
 		$this->mimeType = self::getBestSupportedMimeType(self::$supportedMimeTypes, $this->accept);
 		if (is_null($this->mimeType)) {
-			$this->mimeType = self::defaultMimeType;
+			$this->setCode(406); // Not Acceptable
 		}
 	}
 
