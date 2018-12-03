@@ -5,6 +5,7 @@ namespace Mvc\Controller;
 use \Mvc\Http\Request;
 use \Mvc\Http\Response;
 use \Mvc\Routing\Route;
+use \Mvc\Assert;
 
 
 /**
@@ -47,7 +48,24 @@ abstract class Controller
 	public function getRoute(): Route {
 		return $this->request->route;
 	}
-	
+
+
+	/**
+	 * Renvoie la valeur d'un parmètre de route obligatoire.
+	 *
+	 * @param string $param_name  Nom du paramètre à récupérer
+	 *
+	 * @return mixed
+	 */
+	public function getMandatoryRouteParameter($param_name)
+	{
+		$value = $this->routeParameters->$param_name;
+		Assert::mustBeNotNull($value,
+			"Route '{$this->getRoute()}': the '$param_name' parameter must be defined"
+		);
+		return $value;
+	}
+
 
 	/**
 	 * À implémenter dans les classes enfant.

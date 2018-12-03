@@ -22,9 +22,6 @@ $em->createEntity([
 
 
 $entity = $em->findEntity('Grèce');
-var_dump($entity->toArray());
-
-die;
 
 
 // Configuration globale:

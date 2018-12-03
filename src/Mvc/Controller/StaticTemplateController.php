@@ -13,9 +13,20 @@ use \Mvc\Assert;
  */
 class StaticTemplateController extends TemplateController
 {
+	protected $template;
+	protected $parameters;
+
+
+	/**
+	 * Constructeur.
+	 *
+	 * @param Request $request
+	 */
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
+		$this->template = $this->getMandatoryRouteParameter('template');
+		$this->parameters = $this->routeParameters->parameters;
 	}
 
 	/**
@@ -25,12 +36,7 @@ class StaticTemplateController extends TemplateController
 	 */
 	public function getResponse(): Response
 	{
-		$template = $this->routeParameters->template;
-		Assert::mustBeNotNull($template,
-			"Route '{$this->getRoute()}': the 'template' parameter must be defined"
-		);
-		$parameters = $this->routeParameters->parameters ?? [];
-		return $this->getTemplateResponse($template, $parameters);
+		return $this->getTemplateResponse($this->template, $this->parameters);
 	}
 	
 }

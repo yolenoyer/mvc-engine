@@ -19,22 +19,25 @@ abstract class TemplateController extends Controller
 	 * Renvoie un template processé, contenant les paramètres fournis ainsi qu'un objet 'request'
 	 * additionnel.
 	 *
-	 * @param string $template_name  Nom de template
-	 * @param array $params          Paramètres à fournir au template
+	 * @param string $template_name    Nom de template
+	 * @param ObjectFromArray $params  Paramètres à fournir au template
 	 *
 	 * @return string
 	 */
-	protected function getTemplateOutput(string $template_name, array $params=[]): string {
-		$params = array_merge([], $params);
+	protected function getTemplateOutput(string $template_name, $params=null): string {
+		if (is_null($params)) {
+			$params = new ObjectFromArray([]);
+		} else {
+			$params = new ObjectFromArray($params->array);
+		}
 
-		$params['request'] = $this->request;
+		$params->request = $this->request;
 
-		$params['app'] = [
+		$params->app = [
 			'project_path' => Util::getProjectPath(),
 			'url_root' => Util::getUrlRoot(),
 		];
 
-		$params = new ObjectFromArray($params);
 		$processor = \Mvc\Templating\Processor::getInstance();
 		$output = $processor->process($template_name, $params);
 
@@ -45,17 +48,20 @@ abstract class TemplateController extends Controller
 	/**
 	 * Renvoie une réponse html à partir d'un template (headers compris).
 	 *
-	 * @param string $template_name  Nom de template
-	 * @param array $params          Paramètres à fournir au template
-	 * @param int $code              Code à renvoyer
+	 * @param string $template_name    Nom de template
+	 * @param ObjectFromArray $params  Paramètres à fournir au template
+	 * @param int $code                Code à renvoyer
 	 *
 	 * @return \Mvc\Http\Response
 	 */
 	protected function getTemplateResponse(
 		string $template_name,
-		array $params=[],
+		$params=null,
 		int $code=200
 	): Response {
+		if (is_null($params)) {
+			$params = new ObjectFromArray([]);
+		};
 		$output = $this->getTemplateOutput($template_name, $params);
 		return new Response($output, 'text/html', $code);
 	}
