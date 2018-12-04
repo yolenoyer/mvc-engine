@@ -37,7 +37,7 @@ class ControllerDefinition
 			$name = $definition['controller'];
 			$parameters = $definition['parameters'] ?? [];
 		} else {
-			throw new Exception("Routeur: erreur de configuration");
+			throw new \Mvc\Exception("Router: configuration error");
 		}
 
 		Assert::mustBeNotEmpty($name, "Router: empty controller name");
