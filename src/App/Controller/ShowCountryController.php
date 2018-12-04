@@ -5,7 +5,7 @@ namespace App\Controller;
 use \Mvc\Controller\TemplateController;
 use \Mvc\Http\Request;
 use \Mvc\Http\Response;
-use \Mvc\Model\EntityManager;
+use \Mvc\Database\EntityManager;
 
 
 class ShowCountryController extends TemplateController

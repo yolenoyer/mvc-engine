@@ -4,7 +4,7 @@
 
 	$projectPath = realpath(__DIR__.'/..');
 
-	\Mvc\Container::setParameters([
+	\Mvc\Config::setParameters([
 		'project.path'           => $projectPath,
 		'templating.templateDir' => "$projectPath/src/App/views",
 		'database.connection' => [

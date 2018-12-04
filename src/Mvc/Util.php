@@ -2,7 +2,7 @@
 
 namespace Mvc;
 
-use \Mvc\Container;
+use \Mvc\Config;
 
 
 /**
@@ -19,7 +19,7 @@ class Util
 	{
 		static $project_path = null;
 		if (is_null($project_path)) {
-			$project_path = Container::getMandatoryParameter('project.path');
+			$project_path = Config::getMandatoryParameter('project.path');
 		}
 		return $project_path;
 	}

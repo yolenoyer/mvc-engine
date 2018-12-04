@@ -4,7 +4,7 @@ namespace Mvc\Controller;
 
 use \Mvc\Http\Response;
 use \Mvc\Http\Request;
-use \Mvc\Model\EntityManager;
+use \Mvc\Database\EntityManager;
 use \Mvc\Model\Schema;
 use \Mvc\Assert;
 
@@ -39,7 +39,6 @@ class RestController extends Controller
 				);
 			}
 			$this->schema = Schema::getSchemaFromEntity($EntityClass);
-			echo $this->schema->getName();
 		}
 		$this->em = new EntityManager($this->schema);
 	}

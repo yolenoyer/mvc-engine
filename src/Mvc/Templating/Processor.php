@@ -3,7 +3,7 @@
 namespace Mvc\Templating;
 
 use \Mvc\ObjectFromArray;
-use \Mvc\Container;
+use \Mvc\Config;
 
 
 class Processor
@@ -26,7 +26,7 @@ class Processor
 	static function getInstance(): Processor {
 		static $instance = null;
 		if (is_null($instance)) {
-			$templates_dir = Container::getMandatoryParameter('templating.templateDir');
+			$templates_dir = Config::getMandatoryParameter('templating.templateDir');
 			$instance = new Processor($templates_dir);
 		}
 		return $instance;

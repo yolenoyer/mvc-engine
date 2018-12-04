@@ -2,7 +2,7 @@
 
 namespace Mvc\Database;
 
-use \Mvc\Container;
+use \Mvc\Config;
 
 
 /**
@@ -41,7 +41,7 @@ class Database
 	{
 		static $db = null;
 		if (is_null($db)) {
-			$connection = Container::getMandatoryParameter('database.connection');
+			$connection = Config::getMandatoryParameter('database.connection');
 			$db = new Database($connection);
 		}
 		return $db;

@@ -1,6 +1,9 @@
 <?php
 
-namespace Mvc\Model;
+namespace Mvc\Database;
+
+use \Mvc\Model\Schema;
+use \Mvc\Model\Entity;
 
 
 /**

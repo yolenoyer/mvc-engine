@@ -6,23 +6,23 @@ use \Mvc\Assert;
 
 
 /**
- * Permet un accès global à l'application (configuration, et autre futurement).
+ * Permet un accès global à la configuration du framework mvc.
  */
-class Container
+class Config
 {
 	private $parameters = [];
 
 
 	/**
-	 * Renvoie une instance unique (singleton) de Container.
+	 * Renvoie une instance unique (singleton) de Config.
 	 *
-	 * @return Container
+	 * @return Config
 	 */
-	public static function getInstance(): Container
+	public static function getInstance(): Config
 	{
 		static $container = null;
 		if (is_null($container)) {
-			$container = new Container();
+			$container = new Config();
 		}
 		return $container;
 	}
@@ -90,9 +90,9 @@ class Container
 	 * @param string $key   Nom du paramètre
 	 * @param mixed $value  Valeur à configurer
 	 *
-	 * @return Container  Pour chainage
+	 * @return Config  Pour chainage
 	 */
-	public static function setParameter(string $key, $value)
+	public static function setParameter(string $key, $value): Config
 	{
 		$container = self::getInstance();
 		$container->parameters[$key] = $value;
@@ -105,9 +105,9 @@ class Container
 	 *
 	 * @param array $parameters  Tableau de clés/valeurs
 	 *
-	 * @return Container  Pour chainage
+	 * @return Config  Pour chainage
 	 */
-	public static function setParameters(array $parameters)
+	public static function setParameters(array $parameters): Config
 	{
 		$container = self::getInstance();
 		$container->parameters = array_merge($container->parameters, $parameters);
