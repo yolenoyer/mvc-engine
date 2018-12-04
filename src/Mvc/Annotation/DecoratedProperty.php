@@ -74,5 +74,17 @@ class DecoratedProperty
 	{
 		return $this->docComment->hasAnnotation('primary');
 	}
+
+
+	/**
+	 * Renvoie true si la propriété est définie avec un auto indent.
+	 * (Annotation @AutoIndent).
+	 *
+	 * @return bool
+	 */
+	public function isAutoIndent(): bool
+	{
+		return $this->docComment->hasAnnotation('autoindent');
+	}
 }
 

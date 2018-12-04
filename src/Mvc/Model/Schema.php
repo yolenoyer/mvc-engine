@@ -3,7 +3,6 @@
 namespace Mvc\Model;
 
 use \Mvc\Assert;
-use \Mvc\Annotation\DecoratedProperty;
 
 
 /**
@@ -22,7 +21,7 @@ class Schema
 	public function __construct(string $name, array $definitions=[])
 	{
 		$this->name = $name;
-		$this->addProperties($definitions);
+		$this->addPropertiesFromDef($definitions);
 	}
 
 
@@ -52,19 +51,11 @@ class Schema
 		$schema = new Schema(self::getSchemaName($class_name));
 		$reflect_class = new \ReflectionClass($class_name);
 		$properties = $reflect_class->getProperties(\ReflectionProperty::IS_PUBLIC);
-		foreach ($properties as $property) {
-			$anno_prop = new DecoratedProperty($property);
-
-			if (!$anno_prop->isProperty()) {
-				continue;
+		foreach ($properties as $property_refl) {
+			$property = SchemaProperty::createFromClassProperty($property_refl, $schema);
+			if (!is_null($property)) {
+				$schema->addProperty($property);
 			}
-
-			$definition = [ 'type' => $anno_prop->getType() ];
-			if ($anno_prop->isPrimary()) {
-				$definition['primary'] = true;
-			}
-
-			$schema->addProperty($anno_prop->getName(), $definition);
 		}
 		return $schema;
 	}
@@ -90,19 +81,33 @@ class Schema
 	 *
 	 * @return Schema  Pour chainage
 	 */
-	public function addProperty(string $name, array $definition): Schema
+	public function addProperty(SchemaProperty $property): Schema
 	{
-		$property = new SchemaProperty($this, $name, $definition);
 		array_push($this->properties, $property);
 
 		// Définition éventuelle de la propriété id:
 		if ($property->isPrimaryKey()) {
 			Assert::mustBeNull($this->primaryKey,
-				"Error in schema construction ('{$this->name}'): multiple primary keys"
+				"Error in schema construction ('{$this->name}'): multiple primary keys are not supported"
 			);
 			$this->primaryKey = $property;
 		}
 
+		return $this;
+	}
+
+
+	/**
+	 * Ajoute une propriété dans la définition du schéma.
+	 *
+	 * @param string $name       Nom de la nouvelle propriété
+	 * @param array $definition  Définition
+	 *
+	 * @return Schema  Pour chainage
+	 */
+	public function addPropertyFromDef(string $name, array $definition): Schema
+	{
+		$this->addProperty(new SchemaProperty($this, $name, $definition));
 		return $this;
 	}
 
@@ -114,10 +119,10 @@ class Schema
 	 *
 	 * @return Schema  Pour chainage
 	 */
-	public function addProperties(array $definitions): Schema
+	public function addPropertiesFromDef(array $definitions): Schema
 	{
 		foreach ($definitions as $prop_name => $definition) {
-			$this->addProperty($prop_name, $definition);
+			$this->addPropertyFromDef($prop_name, $definition);
 		}
 		return $this;
 	}

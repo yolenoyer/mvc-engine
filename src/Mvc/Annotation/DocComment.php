@@ -2,6 +2,8 @@
 
 namespace Mvc\Annotation;
 
+use \Mvc\Assert;
+
 
 /**
  * Gère une liste d'annotations.
@@ -73,7 +75,7 @@ class DocComment
 	 *
 	 * @return Annotation|null
 	 */
-	public function getOneAnnotation(string $anno_name)
+	public function getOneAnnotation(string $anno_name): ?Annotation
 	{
 		$annos = $this->getAnnotations($anno_name);
 		return empty($annos) ? null : $annos[0];
@@ -85,8 +87,6 @@ class DocComment
 	 * Parse un doc comment.
 	 *
 	 * @param string $input
-	 *
-	 * @return array  Tableau d'annotations
 	 */
 	protected function parse(string $input)
 	{
