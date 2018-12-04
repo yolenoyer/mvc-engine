@@ -5,6 +5,8 @@ namespace Mvc\Controller;
 use \Mvc\Http\Response;
 use \Mvc\Http\Request;
 use \Mvc\Model\EntityManager;
+use \Mvc\Model\Schema;
+use \Mvc\Assert;
 
 
 /**
@@ -26,8 +28,19 @@ class RestController extends Controller
 	{
 		parent::__construct($request);
 		$this->id = $this->request->urlParams->id;
-		$SchemaClass = $this->getMandatoryRouteParameter('schema');
-		$this->schema = new $SchemaClass();
+		$SchemaClass = $this->routeParameters->schema;
+		if (!is_null($SchemaClass)) {
+			$this->schema = new $SchemaClass();
+		} else {
+			$EntityClass = $this->routeParameters->entity;
+			if (is_null($EntityClass)) {
+				Assert::throwAssert(
+					"Route '{$this->getRoute()}': either the 'schema' parameter or the 'entity' parameter must be defined"
+				);
+			}
+			$this->schema = Schema::getSchemaFromEntity($EntityClass);
+			echo $this->schema->getName();
+		}
 		$this->em = new EntityManager($this->schema);
 	}
 

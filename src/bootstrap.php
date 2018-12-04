@@ -3,6 +3,10 @@
 require __DIR__.'/../vendor/autoload.php';
 
 
+use \Mvc\Model\Schema;
+use \App\Entity\Person;
+
+
 // Configuration globale:
 require "mvc-config.php";
 

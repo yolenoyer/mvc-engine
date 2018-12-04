@@ -26,6 +26,16 @@ class Router extends \Mvc\Routing\Router
 
 		$this->addRoutes(
 			[
+				'/person/:id' =>
+					[
+						'controller' => 'RestController',
+						'parameters' => [ 'entity' => '\App\Entity\Person' ]
+					],
+				'/person' =>
+					[
+						'controller' => 'RestController',
+						'parameters' => [ 'entity' => '\App\Entity\Person' ]
+					],
 				'/country/:id' =>
 					[
 						'controller' => 'RestController',

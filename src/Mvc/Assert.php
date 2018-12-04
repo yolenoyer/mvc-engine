@@ -9,6 +9,17 @@ namespace Mvc;
 class Assert
 {
 	/**
+	 * Envoie une exception.
+	 *
+	 * @param string $message  Message à envoyer
+	 */
+	public static function throwAssert(string $message)
+	{
+		throw new \Mvc\Exception($message);
+	}
+
+
+	/**
 	 * S'assure qu'une condition donnée est vraie.
 	 *
 	 * @param mixed $cond      Condition à vérifier
@@ -17,7 +28,7 @@ class Assert
 	public static function mustBeTrue($cond, string $message)
 	{
 		if (!$cond) {
-			throw new \Mvc\Exception($message);
+			self::throwAssert($message);
 		}
 	}
 

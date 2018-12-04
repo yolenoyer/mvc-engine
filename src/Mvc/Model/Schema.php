@@ -3,6 +3,7 @@
 namespace Mvc\Model;
 
 use \Mvc\Assert;
+use \Mvc\Annotation\AnnotatedProperty;
 
 
 /**
@@ -26,13 +27,55 @@ class Schema
 
 
 	/**
+	 * Interne: renvoie le nom auto-généré à partir d'un nom de classe.
+	 *
+	 * @param string $class_name
+	 *
+	 * @return string
+	 */
+	private static function getSchemaName(string $class_name): string
+	{
+		$split = explode('\\', $class_name);
+		return strtolower($split[count($split)-1]);
+	}
+
+
+	/**
+	 * Renvoie un nouveau schéma à partir d'une classe annotée.
+	 *
+	 * @param string $class_name
+	 *
+	 * @return Schema
+	 */
+	public static function getSchemaFromEntity(string $class_name): Schema
+	{
+		$schema = new Schema(self::getSchemaName($class_name));
+		$reflect_class = new \ReflectionClass($class_name);
+		$properties = $reflect_class->getProperties(\ReflectionProperty::IS_PUBLIC);
+		foreach ($properties as $property) {
+			$anno_prop = new AnnotatedProperty($property);
+
+			if (!$anno_prop->isProperty()) {
+				continue;
+			}
+
+			$definition = [ 'type' => $anno_prop->getType() ];
+			if ($anno_prop->isPrimary()) {
+				$definition['primary'] = true;
+			}
+
+			$schema->addProperty($anno_prop->getName(), $definition);
+		}
+		return $schema;
+	}
+
+
+	/**
 	 * Représentation chainée.
 	 *
-	 * @param ):string
-	 *
-	 * @return 
+	 * @return string
 	 */
-	public function __toString():string
+	public function __toString(): string
 	{
 		return $this->name;
 	}
