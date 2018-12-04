@@ -49,6 +49,38 @@ class Request
 	}
 
 
+	public function getBodyData()
+	{
+		$t = $this->getContentType();
+		$body = $this->getBody();
+		switch($t) {
+		case 'application/json':
+			return json_decode($body, true);
+		case 'application/x-www-form-urlencoded':
+			return $_POST;
+		default:
+			return $body;
+		}
+	}
+
+
+	/**
+	 * Renvoie le contenu éventuel du header "Content-Type", ou null.
+	 *
+	 * @return string|null
+	 */
+	public function getContentType()
+	{
+		$ct = $this->headers['content-type'] ?? null;
+		if (is_null($ct)) {
+			return null;
+		}
+		// TODO: explode()[0] permet de passer outre les paramètres supplémentaires, mais en théorie
+		// ces paramètres devraient être pris en compte:
+		return explode(';', $ct)[0];
+	}
+
+
 	/**
 	 * Renvoie les paramètres optionnels donnés au routeur, et destinés à l'initialisation du
 	 * contrôleur.

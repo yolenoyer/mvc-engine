@@ -3,7 +3,6 @@
 require __DIR__.'/../vendor/autoload.php';
 
 
-
 // Configuration globale:
 require "mvc-config.php";
 

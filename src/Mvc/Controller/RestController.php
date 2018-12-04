@@ -50,8 +50,7 @@ class RestController extends Controller
 				}
 
 			case 'POST':
-				$json = Request::getBody();
-				$data = json_decode($json, true);
+				$data = $this->request->getBodyData();
 				if (!$this->schema->convertValues($data)) {
 					return new Response('Invalid data set', 400); // Bad Request
 				}

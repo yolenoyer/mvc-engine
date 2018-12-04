@@ -176,8 +176,11 @@ class Schema
 	 *
 	 * @return bool  Renvoie false si échec
 	 */
-	public function convertValues(array &$data)
+	public function convertValues(&$data)
 	{
+		if (!is_array($data)) {
+			return false;
+		}
 		$success = true;
 		foreach ($this->properties as $property) {
 			$prop_name = $property->getName();
