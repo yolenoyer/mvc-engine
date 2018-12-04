@@ -40,7 +40,7 @@ abstract class Controller
 	}
 
 
-	/*
+	/**
 	 * Retourne la route.
 	 *
 	 * @return Route
