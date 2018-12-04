@@ -4,9 +4,9 @@ namespace Mvc\Annotation;
 
 
 /**
- * Représente les annotations de propriété à prendre en compte pour les modèles.
+ * Représente une propriété de classe décorée.
  */
-class AnnotatedProperty
+class DecoratedProperty
 {
 	public $reflectProp;
 	protected $docComment;
@@ -37,7 +37,7 @@ class AnnotatedProperty
 
 
 	/**
-	 * Renvoie le contenu de @Type
+	 * Renvoie le contenu de @Type.
 	 *
 	 * @return 
 	 */

@@ -3,7 +3,7 @@
 namespace Mvc\Model;
 
 use \Mvc\Assert;
-use \Mvc\Annotation\AnnotatedProperty;
+use \Mvc\Annotation\DecoratedProperty;
 
 
 /**
@@ -53,7 +53,7 @@ class Schema
 		$reflect_class = new \ReflectionClass($class_name);
 		$properties = $reflect_class->getProperties(\ReflectionProperty::IS_PUBLIC);
 		foreach ($properties as $property) {
-			$anno_prop = new AnnotatedProperty($property);
+			$anno_prop = new DecoratedProperty($property);
 
 			if (!$anno_prop->isProperty()) {
 				continue;
