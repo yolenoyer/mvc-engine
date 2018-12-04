@@ -47,15 +47,13 @@ class EntityManager
 	 */
 	public function persist(Entity $entity)
 	{
-		$schema = $this->schema;
-
-		$prop_names = $schema->getPropertyNames();
+		$prop_names = $this->schema->getPropertyNames();
 		$prop_list = join(',', array_map(function($prop_name) {
 			return "`$prop_name`";
 		}, $prop_names));
 		$placeholders = join(',', array_fill(0, count($prop_names), '?'));
 
-		$prepared_query = "INSERT INTO `{$schema->getName()}` ($prop_list) VALUES($placeholders)";
+		$prepared_query = "INSERT INTO `{$this->schema->getName()}` ($prop_list) VALUES($placeholders)";
 		$stmt = $this->pdo->prepare($prepared_query);
 
 		$params = [];
@@ -76,10 +74,9 @@ class EntityManager
 	 */
 	public function find($id)
 	{
-		$schema = $this->schema;
-		$primary = $schema->getPrimaryKey()->getName();
+		$primary = $this->schema->getPrimaryKey()->getName();
 
-		$prepared_query = "SELECT * FROM `{$schema->getName()}` WHERE `$primary`=?";
+		$prepared_query = "SELECT * FROM `{$this->schema->getName()}` WHERE `$primary`=?";
 		$stmt = $this->pdo->prepare($prepared_query);
 
 		$stmt->execute([ $id ]);
@@ -88,7 +85,7 @@ class EntityManager
 			return null;
 		}
 
-		$schema->convertValues($fetch);
+		$this->schema->convertValues($fetch);
 
 		return $this->schema->newEntity($fetch);
 	}

@@ -3,7 +3,9 @@ a       src/App
 aco,ac  src/App/Controller
 v       src/App/views
 m       src/Mvc
+mo      src/Mvc/Model
 c,co    src/Mvc/Controller
 h       src/Mvc/Http
 r       src/Mvc/Routing
 t       src/Mvc/Templating
+db      src/Mvc/Database
