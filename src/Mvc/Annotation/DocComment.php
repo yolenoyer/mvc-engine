@@ -92,24 +92,10 @@ class DocComment
 	{
 		$lines = self::filterDocComment($input);
 		foreach ($lines as $line) {
-			// Parse une ligne de type: "@MyAnnot(param1, param2, ...)"
-			$success = preg_match('/@(\w+)(?:\s*\((.*)\))?/', $line, $matches);
-			if (!$success) {
-				continue;
+			$annotation = Annotation::createFromString($line);
+			if ($annotation) {
+				$this->addAnnotation($annotation);
 			}
-
-			// Récupère le nom de l'annotation:
-			$anno_name = $matches[1];
-
-			// Récupère et sépare les paramètres:
-			$parameters = $matches[2] ?? '';
-			$parameters = array_map(function($param) {
-				return trim($param);
-			}, explode(',', $parameters));
-
-			// Crée et ajoute une nouvelle annotation:
-			$annotation = new Annotation($anno_name, $parameters);
-			$this->addAnnotation($annotation);
 		}
 	}
 
