@@ -9,20 +9,20 @@ namespace App\Entity;
 class Person
 {
 	/**
-	 * @Property
+	 * @Column
 	 * @Type(integer)
 	 * @Primary
 	 */
 	public $id;
 
 	/**
-	 * @Property
+	 * @Column
 	 * @Type(string)
 	 */
 	public $name;
 
 	/**
-	 * @Property
+	 * @Column
 	 * @Type(string)
 	 */
 	public $address;

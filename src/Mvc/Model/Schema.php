@@ -11,7 +11,7 @@ use \Mvc\Assert;
 class Schema
 {
 	protected $name;
-	protected $properties = [];
+	protected $columns = [];
 	protected $primaryKey = null;
 
 
@@ -21,7 +21,7 @@ class Schema
 	public function __construct(string $name, array $definitions=[])
 	{
 		$this->name = $name;
-		$this->addPropertiesFromDef($definitions);
+		$this->addColumnsFromDef($definitions);
 	}
 
 
@@ -52,9 +52,9 @@ class Schema
 		$reflect_class = new \ReflectionClass($class_name);
 		$properties = $reflect_class->getProperties(\ReflectionProperty::IS_PUBLIC);
 		foreach ($properties as $property_refl) {
-			$property = SchemaProperty::createFromClassProperty($property_refl, $schema);
-			if (!is_null($property)) {
-				$schema->addProperty($property);
+			$column = SchemaColumn::createFromClassProperty($property_refl, $schema);
+			if (!is_null($column)) {
+				$schema->addColumn($column);
 			}
 		}
 		return $schema;
@@ -74,23 +74,23 @@ class Schema
 
 
 	/**
-	 * Ajoute une propriété dans la définition du schéma.
+	 * Ajoute une colonne dans la définition du schéma.
 	 *
-	 * @param string $name       Nom de la nouvelle propriété
+	 * @param string $name       Nom de la nouvelle colonne
 	 * @param array $definition  Définition
 	 *
 	 * @return Schema  Pour chainage
 	 */
-	public function addProperty(SchemaProperty $property): Schema
+	public function addColumn(SchemaColumn $column): Schema
 	{
-		array_push($this->properties, $property);
+		array_push($this->columns, $column);
 
-		// Définition éventuelle de la propriété id:
-		if ($property->isPrimaryKey()) {
+		// Définition éventuelle de la clé primaire:
+		if ($column->isPrimaryKey()) {
 			Assert::mustBeNull($this->primaryKey,
 				"Error in schema construction ('{$this->name}'): multiple primary keys are not supported"
 			);
-			$this->primaryKey = $property;
+			$this->primaryKey = $column;
 		}
 
 		return $this;
@@ -98,74 +98,74 @@ class Schema
 
 
 	/**
-	 * Ajoute une propriété dans la définition du schéma.
+	 * Ajoute une colonne dans la définition du schéma.
 	 *
-	 * @param string $name       Nom de la nouvelle propriété
+	 * @param string $name       Nom de la nouvelle colonne
 	 * @param array $definition  Définition
 	 *
 	 * @return Schema  Pour chainage
 	 */
-	public function addPropertyFromDef(string $name, array $definition): Schema
+	public function addColumnFromDef(string $name, array $definition): Schema
 	{
-		$this->addProperty(new SchemaProperty($this, $name, $definition));
+		$this->addColumn(new SchemaColumn($this, $name, $definition));
 		return $this;
 	}
 
 
 	/**
-	 * Ajoute plusieurs propriétés à la fois.
+	 * Ajoute plusieurs colonnes à la fois.
 	 *
 	 * @param array $definitions
 	 *
 	 * @return Schema  Pour chainage
 	 */
-	public function addPropertiesFromDef(array $definitions): Schema
+	public function addColumnsFromDef(array $definitions): Schema
 	{
-		foreach ($definitions as $prop_name => $definition) {
-			$this->addPropertyFromDef($prop_name, $definition);
+		foreach ($definitions as $column_name => $definition) {
+			$this->addColumnFromDef($column_name, $definition);
 		}
 		return $this;
 	}
 
 
 	/*
-	 * Getter for properties
+	 * Getter for columns
 	 */
-	public function getProperties(): array
+	public function getColumns(): array
 	{
-		return $this->properties;
+		return $this->columns;
 	}
 
 
 	/**
-	 * Cherche une propriété par son nom.
+	 * Cherche une colonne par son nom.
 	 *
-	 * @param string $prop_name
+	 * @param string $column_name
 	 *
-	 * @return SchemaProperty
+	 * @return SchemaColumn
 	 */
-	public function getProperty(string $prop_name): SchemaProperty
+	public function getColumn(string $column_name): SchemaColumn
 	{
-		foreach ($this->properties as $property) {
-			if ($property->getName() === $prop_name) {
-				return $property;
+		foreach ($this->columns as $column) {
+			if ($column->getName() === $column_name) {
+				return $column;
 			}
 		}
-		throw new \Mvc\Exception("Unknown property name: '$prop_name'.");
+		throw new \Mvc\Exception("Unknown column name: '$column_name'.");
 	}
 
 
 	/**
-	 * Renvoie true si la propriété existe.
+	 * Renvoie true si la colonne existe.
 	 *
-	 * @param string $prop_name  Nom de propriété à tester
+	 * @param string $column_name  Nom de colonne à tester
 	 *
 	 * @return bool
 	 */
-	public function hasProperty(string $prop_name): bool
+	public function hasColumn(string $column_name): bool
 	{
-		foreach ($this->properties as $property) {
-			if ($property->getName() == $prop_name) {
+		foreach ($this->columns as $column) {
+			if ($column->getName() == $column_name) {
 				return true;
 			}
 		}
@@ -174,15 +174,15 @@ class Schema
 
 
 	/**
-	 * Renvoie la liste des noms de toutes les propriétés.
+	 * Renvoie la liste des noms de toutes les colonnes.
 	 *
 	 * @return array
 	 */
-	public function getPropertyNames(): array
+	public function getColumnNames(): array
 	{
-		return array_map(function($prop) {
-			return $prop->getName();
-		}, $this->properties);
+		return array_map(function($column) {
+			return $column->getName();
+		}, $this->columns);
 	}
 
 
@@ -207,12 +207,12 @@ class Schema
 	 */
 	public function mustBeValidData(array $data)
 	{
-		foreach ($this->properties as $property) {
-			$prop_name = $property->getName();
-			Assert::mustKeyExist($data, $prop_name,
-				"Missing entity property '$prop_name', unable to match the '{$this->name}' schema."
+		foreach ($this->columns as $column) {
+			$column_name = $column->getName();
+			Assert::mustKeyExist($data, $column_name,
+				"Missing entity column '$column_name', unable to match the '{$this->name}' schema."
 			);
-			$property->mustBeValidValue($data[$prop_name]);
+			$column->mustBeValidValue($data[$column_name]);
 		}
 	}
 
@@ -230,10 +230,10 @@ class Schema
 			return false;
 		}
 		$success = true;
-		foreach ($this->properties as $property) {
-			$prop_name = $property->getName();
-			$type = $property->getType();
-			if (!isset($data[$prop_name]) || !settype($data[$prop_name], $type)) {
+		foreach ($this->columns as $column) {
+			$column_name = $column->getName();
+			$type = $column->getType();
+			if (!isset($data[$column_name]) || !settype($data[$column_name], $type)) {
 				$success = false;
 			}
 		}
@@ -265,7 +265,7 @@ class Schema
 	public function mustHavePrimaryKey()
 	{
 		Assert::mustBeNotNull($this->primaryKey,
-			"The schema '{$this}' must have a primary key property"
+			"The schema '{$this}' must have a primary key column"
 		);
 	}
 }

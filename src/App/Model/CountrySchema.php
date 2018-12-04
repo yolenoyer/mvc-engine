@@ -16,10 +16,10 @@ class CountrySchema extends Schema
 	public function __construct() {
 		parent::__construct('country');
 		$this
-			->addPropertyFromDef('name', [ 'type' => 'string', 'primary' => true ])
-			->addPropertyFromDef('population', [ 'type' => 'integer' ])
-			->addPropertyFromDef('capital', [ 'type' => 'string' ])
-			->addPropertyFromDef('language', [ 'type' => 'string' ])
+			->addColumnFromDef('name', [ 'type' => 'string', 'primary' => true ])
+			->addColumnFromDef('population', [ 'type' => 'integer' ])
+			->addColumnFromDef('capital', [ 'type' => 'string' ])
+			->addColumnFromDef('language', [ 'type' => 'string' ])
 		;
 	}
 }

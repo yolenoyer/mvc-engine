@@ -7,9 +7,9 @@ use \Mvc\Annotation\DocComment;
 
 
 /**
- * Décrit une propriété de schéma.
+ * Décrit une colonne de schéma.
  */
-class SchemaProperty
+class SchemaColumn
 {
 	protected $name;
 	protected $type;
@@ -20,8 +20,8 @@ class SchemaProperty
 	/**
 	 * Constructeur.
 	 *
-	 * @param Schema $schema     Schéma auquel est rattaché cette propriété
-	 * @param string $name       Nom de la propriété
+	 * @param Schema $schema     Schéma auquel est rattaché cette colonne
+	 * @param string $name       Nom de la colonne
 	 * @param array $definition  Définition
 	 */
 	public function __construct(Schema $schema, string $name, array $definition)
@@ -34,35 +34,35 @@ class SchemaProperty
 
 
 	/**
-	 * Crée une nouvelle instance de SchemaProperty à partir d'une propriété décorée.
-	 * Renvoie null si l'annotation '@Property' n'est pas définie.
+	 * Crée une nouvelle instance de SchemaColumn à partir d'une propriété décorée.
+	 * Renvoie null si l'annotation '@Column' n'est pas définie.
 	 * Envoie une exception si les annotations sont incorrectes ou insuffisantes.
 	 *
 	 * @param \ReflectionProperty $reflect_prop  Reflection d'une propriété de classe
-	 * @param Schema $schema  Schéma auquel va être attaché la nouvelle propriété
+	 * @param Schema $schema  Schéma auquel va être attaché la nouvelle colonne
 	 *
-	 * @return SchemaProperty | null
+	 * @return SchemaColumn | null
 	 */
 	public static function createFromClassProperty(
 		\ReflectionProperty $reflect_prop,
 		Schema $schema
-	): ?SchemaProperty
+	): ?SchemaColumn
 	{
 		$comments = $reflect_prop->getDocComment();
 		$doc_comment = new DocComment($comments);
 
-		// Doit posséder l'annotation '@Property':
-		if (!$doc_comment->hasAnnotation('property')) {
+		// Doit posséder l'annotation '@Column':
+		if (!$doc_comment->hasAnnotation('column')) {
 			return null;
 		}
 
-		// Nom de la propriété:
-		$prop_name = $reflect_prop->getName();
+		// Nom de la colonne:
+		$column_name = $reflect_prop->getName();
 
 		// Type:
 		$type_annotation = $doc_comment->getOneAnnotation('type');
 		Assert::mustBeNotNull($type_annotation,
-			"Schema '{$schema->getName()}': the property '$prop_name' must have a '@Type()' annotation"
+			"Schema '{$schema->getName()}': the property '$column_name' must have a '@Type()' annotation"
 		);
 		$type_annotation->mustHaveNParameters(1);
 		$type = $type_annotation->getParameter(0);
@@ -79,7 +79,7 @@ class SchemaProperty
 			'autoindent' => $is_autoindent,
 		];
 
-		return new SchemaProperty($schema, $prop_name, $definition);
+		return new SchemaColumn($schema, $column_name, $definition);
 	}
 
 
@@ -105,7 +105,7 @@ class SchemaProperty
 	/*
 	 * Setter for name
 	 */
-	public function setName(string $name): SchemaProperty
+	public function setName(string $name): SchemaColumn
 	{
 		$this->name = $name;
 		return $this;
@@ -122,7 +122,7 @@ class SchemaProperty
 	/*
 	 * Setter for type
 	 */
-	public function setType($type): SchemaProperty
+	public function setType($type): SchemaColumn
 	{
 		$this->type = $type;
 		return $this;
@@ -139,7 +139,7 @@ class SchemaProperty
 	/*
 	 * Setter for isPrimaryKey
 	 */
-	public function setIsPrimaryKey($isPrimaryKey): SchemaProperty
+	public function setIsPrimaryKey($isPrimaryKey): SchemaColumn
 	{
 		$this->_isPrimaryKey = $isPrimaryKey;
 		return $this;
@@ -156,7 +156,7 @@ class SchemaProperty
 	/*
 	 * Setter for schema
 	 */
-	public function setSchema(Schema $schema): SchemaProperty
+	public function setSchema(Schema $schema): SchemaColumn
 	{
 		$this->schema = $schema;
 		return $this;
@@ -164,7 +164,7 @@ class SchemaProperty
 	
 
 	/**
-	 * Envoie une exception si la valeur donnée n'est pas valide pour cette propriété.
+	 * Envoie une exception si la valeur donnée n'est pas valide pour cette colonne.
 	 *
 	 * @param mixed $value
 	 */
@@ -172,7 +172,7 @@ class SchemaProperty
 	{
 		$type = gettype($value);
 		Assert::mustHaveType($value, $this->type,
-			"Wrong type ('$type') for the property '{$this}': must be '{$this->type}'"
+			"Wrong type ('$type') for the column '{$this}': must be '{$this->type}'"
 		);
 	}
 	

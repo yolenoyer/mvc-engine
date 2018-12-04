@@ -16,7 +16,8 @@ class Entity
 	/**
 	 * Constructeur.
 	 *
-	 * @param array $properties  Liste des propriétés publiques du modèle
+	 * @param Schema $schema  Schéma rattaché
+	 * @param array $data     Liste des valeurs de chaque colonne de l'entité
 	 */
 	public function __construct(Schema $schema, array $data)
 	{
@@ -24,8 +25,8 @@ class Entity
 		$this->schema->mustBeValidData($data);
 
 		$this->data = [];
-		foreach ($this->schema->getPropertyNames() as $prop_name) {
-			$this->data[$prop_name] = $data[$prop_name];
+		foreach ($this->schema->getColumnNames() as $column_name) {
+			$this->data[$column_name] = $data[$column_name];
 		}
 	}
 
@@ -42,33 +43,33 @@ class Entity
 
 
 	/**
-	 * Renvoie la valeur d'une propriété donnée.
+	 * Renvoie la valeur d'une colonne donnée.
 	 *
-	 * @param string $prop_name
+	 * @param string $column_name
 	 *
 	 * @return mixed
 	 */
-	public function get(string $prop_name)
+	public function get(string $column_name)
 	{
-		$this->mustBeValidPropertyName($prop_name);
-		return $this->data[$prop_name];
+		$this->mustBeValidColumnName($column_name);
+		return $this->data[$column_name];
 	}
 
 
 	/**
-	 * Définit la valeur d'une propriété.
+	 * Définit la valeur d'une colonne.
 	 *
-	 * @param string $prop_name
+	 * @param string $column_name
 	 * @param mixed $value
 	 *
 	 * @return Entity  Pour chainage
 	 */
-	public function set(string $prop_name, $value): Entity
+	public function set(string $column_name, $value): Entity
 	{
-		$this->mustBeValidPropertyName($prop_name);
-		$property = $this->schema->getProperty($prop_name);
-		$property->mustBeValidValue($value);
-		$this->data[$prop_name] = $value;
+		$this->mustBeValidColumnName($column_name);
+		$column = $this->schema->getColumn($column_name);
+		$column->mustBeValidValue($value);
+		$this->data[$column_name] = $value;
 		return $this;
 	}
 
@@ -81,21 +82,21 @@ class Entity
 	public function getId()
 	{
 		$this->schema->mustHavePrimaryKey();
-		$id_prop = $this->schema->getPrimaryKey();
-		$prop_name = $id_prop->getName();
-		return $this->data[$prop_name];
+		$id_column = $this->schema->getPrimaryKey();
+		$column_name = $id_column->getName();
+		return $this->data[$column_name];
 	}
 	
 
 	/**
-	 * S'assure qu'un nom de propriété est valide.
+	 * S'assure qu'un nom de colonne est valide.
 	 *
-	 * @param string $prop_name
+	 * @param string $column_name
 	 */
-	public function mustBeValidPropertyName(string $prop_name)
+	public function mustBeValidColumnName(string $column_name)
 	{
-		Assert::mustBeTrue($this->schema->hasProperty($prop_name),
-			"The property '$prop_name' does not exist in the '{$this->schema->getName()}' schema."
+		Assert::mustBeTrue($this->schema->hasColumn($column_name),
+			"The column '$column_name' does not exist in the '{$this->schema->getName()}' schema."
 		);
 	}
 
