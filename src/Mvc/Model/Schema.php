@@ -70,7 +70,6 @@ class Schema
 	{
 		return $this->name;
 	}
-	
 
 
 	/**
