@@ -10,7 +10,7 @@ use \Mvc\Assert;
 
 
 /**
- * Gère en Rest les interactions avec un schéma donné.
+ * Gère en Rest les interactions avec un schéma donné dans les paramètres de la route.
  */
 class RestController extends Controller
 {
@@ -66,12 +66,35 @@ class RestController extends Controller
 				if (!$this->schema->convertValues($data)) {
 					return new Response('Invalid data set', 400); // Bad Request
 				}
-				$entity = $this->em->newEntity($data);
-				$this->em->persist($entity);
+				try {
+					$entity = $this->em->newEntity($data);
+					$entity->mustBeValidData(true); // true = valide+complet (pas de colonne manquante)
+					$this->em->persist($entity);
+				}
+				catch (\Mvc\Exception $e) {
+					return new Response('Invalid data set: '.$e->getMessage(), 400); // Bad Request
+				}
 				return new Response();
 
 			case 'PUT':
-				return new Response('To be done...', 418, 'text/plain'); // Teapot
+				$entity = $this->em->find($this->id);
+
+				if (is_null($entity)) {
+					return new Response('Not found', 404); // Not Found
+				}
+
+				$data = $this->request->getBodyData();
+				if (!$this->schema->convertValues($data)) {
+					return new Response('Invalid data set', 400); // Bad Request
+				}
+				try {
+					$entity->setData($data);
+				}
+				catch (\Mvc\Exception $e) {
+					return new Response('Invalid data', 400); // Bad Request
+				}
+				$this->em->update($entity);
+				return new Response();
 
 			case 'DELETE':
 				return new Response('To be done...', 418, 'text/plain'); // Teapot

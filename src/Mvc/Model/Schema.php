@@ -216,7 +216,7 @@ class Schema
 	 *
 	 * @param array $data  Données du modèle
 	 *
-	 * @return Entiy
+	 * @return Entity
 	 */
 	public function newEntity(array $data): Entity
 	{
@@ -225,28 +225,8 @@ class Schema
 
 
 	/**
-	 * Vérifie si les données fournies collent au schéma.
-	 * Envoie une exception si ce n'est pas le cas.
-	 *
-	 * @param array $data
-	 */
-	public function mustBeValidData(array $data)
-	{
-		foreach ($this->columns as $column) {
-			if ($column->isAutoIndent()) {
-				continue;
-			}
-			$column_name = $column->getName();
-			Assert::mustKeyExist($data, $column_name,
-				"Missing entity column '$column_name', unable to match the '{$this->name}' schema."
-			);
-			$column->mustBeValidValue($data[$column_name]);
-		}
-	}
-
-
-	/**
 	 * Tente de convertir les données fournies vers le bon type.
+	 * TODO: settype() est beaucoup trop tolérant!
 	 *
 	 * @param array &$data
 	 *
@@ -261,7 +241,10 @@ class Schema
 		foreach ($this->columns as $column) {
 			$column_name = $column->getName();
 			$type = $column->getType();
-			if (!isset($data[$column_name]) || !settype($data[$column_name], $type)) {
+			if (!isset($data[$column_name]) || is_null($data[$column_name])) {
+				continue;
+			}
+			if (!settype($data[$column_name], $type)) {
 				$success = false;
 			}
 		}
@@ -284,6 +267,20 @@ class Schema
 	public function getPrimaryKey()
 	{
 		return $this->primaryKey;
+	}
+
+
+	/**
+	 * Renvoie le nom de la clé primaire, ou null si inexistant.
+	 *
+	 * @return string|null
+	 */
+	public function getPrimaryKeyName(): ?string
+	{
+		if (is_null($this->primaryKey)) {
+			return null;
+		}
+		return $this->primaryKey->getName();
 	}
 
 

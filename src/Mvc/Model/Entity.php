@@ -22,12 +22,13 @@ class Entity
 	public function __construct(Schema $schema, array $data)
 	{
 		$this->schema = $schema;
-		$this->schema->mustBeValidData($data);
 
 		$this->data = [];
 		foreach ($this->schema->getColumnNames() as $column_name) {
-			$this->data[$column_name] = $data[$column_name];
+			$this->data[$column_name] = $data[$column_name] ?? null;
 		}
+
+		$this->mustBeValidData();
 	}
 
 
@@ -75,6 +76,19 @@ class Entity
 
 
 	/**
+	 * Définit plusieurs colonnes à la fois (tableau associatif).
+	 *
+	 * @param array $data
+	 */
+	public function setData(array $data)
+	{
+		foreach ($data as $key => $value) {
+			$this->set($key, $value);
+		}
+	}
+
+
+	/**
 	 * Renvoie la valeur contenue dans la clé primaire de l'entité.
 	 *
 	 * @return mixed
@@ -86,7 +100,50 @@ class Entity
 		$column_name = $id_column->getName();
 		return $this->data[$column_name];
 	}
+
+
+	/**
+	 * Vérifie qu'une colonne a bien été définie.
+	 * Si toutes les colonnes sont définies (à part les colonnes autoindent), l'entité est
+	 * considérée comme "fully defined", et peut être éventuellement persistée comme nouvelle entité.
+	 *
+	 * @param string $column_name
+	 *
+	 * @return bool
+	 */
+	public function columnIsSet(string $column_name): bool
+	{
+		return isset($this->data[$column_name]) && !is_null($this->data[$column_name]);
+	}
 	
+
+	/**
+	 * Vérifie si les données fournies collent au schéma.
+	 * Les données peuvent être incomplètes.
+	 * Envoie une exception si ce n'est pas le cas.
+	 *
+	 * @param array $data
+	 */
+	public function mustBeValidData($mustBeFull=false)
+	{
+		foreach ($this->schema->getColumns() as $schema_column) {
+			if ($schema_column->isAutoIndent()) {
+				continue;
+			}
+			$column_name = $schema_column->getName();
+			if (!$this->columnIsSet($column_name)) {
+				if ($mustBeFull) {
+					Assert::throwAssert(
+						"Missing entity column '$column_name', unable to match the '{$this->schema->getName()}' schema."
+					);
+				} else {
+					continue;
+				}
+			}
+			$schema_column->mustBeValidValue($this->data[$column_name]);
+		}
+	}
+
 
 	/**
 	 * S'assure qu'un nom de colonne est valide.

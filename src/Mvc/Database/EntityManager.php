@@ -50,23 +50,53 @@ class EntityManager
 	 */
 	public function persist(Entity $entity)
 	{
-		$columns = $this->schema->getNoAutoColumns();
+		$column_names = $this->schema->getNoAutoColumnsNames();
 
-		$column_list = join(',', array_map(function($column) {
-			return "`{$column->getName()}`";
-		}, $columns));
-		$placeholders = join(',', array_fill(0, count($columns), '?'));
+		$column_list = join(',', array_map(function($column_name) {
+			return "`$column_name`";
+		}, $column_names));
+		$placeholders = join(',', array_fill(0, count($column_names), '?'));
 
 		$prepared_query = "INSERT INTO `{$this->schema->getName()}` ($column_list) VALUES($placeholders)";
 		$stmt = $this->pdo->prepare($prepared_query);
 
 		$params = [];
-		foreach ($columns as $column) {
-			$column_name = $column->getName();
+		foreach ($column_names as $column_name) {
 			array_push($params, $entity->get($column_name));
 		}
 
 		$stmt->execute($params);
+	}
+
+
+	/**
+	 * Met à jour une entité déjà persistée.
+	 *
+	 * @param Entity $entity  Entité à mettre à jour (la clé primaire doit être présente)
+	 */
+	public function update(Entity $entity)
+	{
+		$column_names = $this->schema->getNoAutoColumnsNames();
+
+		$updates = join(',', array_map(function($column_name) {
+			return "`$column_name`=?";
+		}, $column_names));
+
+		$key = $this->schema->getPrimaryKeyName();
+
+		$prepared_query = "UPDATE `{$this->schema->getName()}` SET ($updates) WHERE `$key`=?";
+		// $stmt = $this->pdo->prepare($prepared_query);
+
+		$params = [];
+		foreach ($column_names as $column_name) {
+			array_push($params, $entity->get($column_name));
+		}
+		array_push($params, $entity->getId());
+
+		echo $prepared_query."\n";
+		var_dump($params);
+
+		// $stmt->execute($params);
 	}
 
 
@@ -77,15 +107,16 @@ class EntityManager
 	 *
 	 * @return Entity|null
 	 */
-	public function find($id)
+	public function find($id): ?Entity
 	{
-		$primary = $this->schema->getPrimaryKey()->getName();
+		$primary = $this->schema->getPrimaryKeyName();
+		$table_name = $this->schema->getName();
 
-		$prepared_query = "SELECT * FROM `{$this->schema->getName()}` WHERE `$primary`=?";
+		$prepared_query = "SELECT * FROM `$table_name` WHERE `$primary`=?";
 		$stmt = $this->pdo->prepare($prepared_query);
-
 		$stmt->execute([ $id ]);
 		$fetch = $stmt->fetch(\PDO::FETCH_ASSOC);
+
 		if ($fetch === false) {
 			return null;
 		}
