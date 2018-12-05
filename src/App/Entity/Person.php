@@ -10,8 +10,9 @@ class Person
 {
 	/**
 	 * @Column
-	 * @Type(integer)
 	 * @Primary
+	 * @AutoIndent
+	 * @Type(integer)
 	 */
 	public $id;
 

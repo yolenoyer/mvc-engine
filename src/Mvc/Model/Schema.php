@@ -137,6 +137,32 @@ class Schema
 
 
 	/**
+	 * Renvoie toutes les colonnes qui ne sont pas autoindent.
+	 *
+	 * @return array
+	 */
+	public function getNoAutoColumns(): array
+	{
+		return array_filter($this->getColumns(), function($column) {
+			return !$column->isAutoIndent();
+		});
+	}
+
+
+	/**
+	 * Renvoie le nom des colonnes qui ne sont pas autoindent.
+	 *
+	 * @return array
+	 */
+	public function getNoAutoColumnsNames(): array
+	{
+		return array_map(function($column) {
+			return $column->getName();
+		}, $this->getNoAutoColumns());
+	}
+
+
+	/**
 	 * Cherche une colonne par son nom.
 	 *
 	 * @param string $column_name
@@ -207,6 +233,9 @@ class Schema
 	public function mustBeValidData(array $data)
 	{
 		foreach ($this->columns as $column) {
+			if ($column->isAutoIndent()) {
+				continue;
+			}
 			$column_name = $column->getName();
 			Assert::mustKeyExist($data, $column_name,
 				"Missing entity column '$column_name', unable to match the '{$this->name}' schema."

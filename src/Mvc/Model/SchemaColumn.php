@@ -29,6 +29,7 @@ class SchemaColumn
 		$this->name = $name;
 		$this->type = $definition['type'] ?? 'string';
 		$this->_isPrimaryKey = !!($definition['primary'] ?? false);
+		$this->_isAutoIndent = !!($definition['autoindent'] ?? false);
 		$this->schema = $schema;
 	}
 
@@ -139,9 +140,26 @@ class SchemaColumn
 	/*
 	 * Setter for isPrimaryKey
 	 */
-	public function setIsPrimaryKey($isPrimaryKey): SchemaColumn
+	public function setPrimaryKey($isPrimaryKey): SchemaColumn
 	{
 		$this->_isPrimaryKey = $isPrimaryKey;
+		return $this;
+	}
+
+	/*
+	 * Getter for autoIndent
+	 */
+	public function isAutoIndent()
+	{
+		return $this->_isAutoIndent;
+	}
+	
+	/*
+	 * Setter for autoIndent
+	 */
+	public function setAutoIndent($autoIndent)
+	{
+		$this->_isAutoIndent = $autoIndent;
 		return $this;
 	}
 

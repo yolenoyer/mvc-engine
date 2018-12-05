@@ -50,17 +50,19 @@ class EntityManager
 	 */
 	public function persist(Entity $entity)
 	{
-		$column_names = $this->schema->getColumnNames();
-		$column_list = join(',', array_map(function($column_name) {
-			return "`$column_name`";
-		}, $column_names));
-		$placeholders = join(',', array_fill(0, count($column_names), '?'));
+		$columns = $this->schema->getNoAutoColumns();
+
+		$column_list = join(',', array_map(function($column) {
+			return "`{$column->getName()}`";
+		}, $columns));
+		$placeholders = join(',', array_fill(0, count($columns), '?'));
 
 		$prepared_query = "INSERT INTO `{$this->schema->getName()}` ($column_list) VALUES($placeholders)";
 		$stmt = $this->pdo->prepare($prepared_query);
 
 		$params = [];
-		foreach ($column_names as $column_name) {
+		foreach ($columns as $column) {
+			$column_name = $column->getName();
 			array_push($params, $entity->get($column_name));
 		}
 
