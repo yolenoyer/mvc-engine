@@ -3,4 +3,6 @@ mvc-extra.php
 *.sw?
 .sw?
 
+php_errors.log
+
 /vendor/

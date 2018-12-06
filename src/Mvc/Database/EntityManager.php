@@ -7,7 +7,7 @@ use \Mvc\Model\Entity;
 
 
 /**
- * Permet de gérer une collection d'entités.
+ * Permet de gérer une collection d'entités, pour un schéma donné.
  */
 class EntityManager
 {
@@ -76,16 +76,15 @@ class EntityManager
 	 */
 	public function update(Entity $entity)
 	{
-		$column_names = $this->schema->getNoAutoColumnsNames();
+		$column_names = $entity->getDefinedColumnNames();
+		$key_column_name = $this->schema->getPrimaryKeyName();
 
 		$updates = join(',', array_map(function($column_name) {
 			return "`$column_name`=?";
 		}, $column_names));
 
-		$key = $this->schema->getPrimaryKeyName();
-
-		$prepared_query = "UPDATE `{$this->schema->getName()}` SET ($updates) WHERE `$key`=?";
-		// $stmt = $this->pdo->prepare($prepared_query);
+		$prepared_query = "UPDATE `{$this->schema->getName()}` SET $updates WHERE `$key_column_name`=?";
+		$stmt = $this->pdo->prepare($prepared_query);
 
 		$params = [];
 		foreach ($column_names as $column_name) {
@@ -93,10 +92,7 @@ class EntityManager
 		}
 		array_push($params, $entity->getId());
 
-		echo $prepared_query."\n";
-		var_dump($params);
-
-		// $stmt->execute($params);
+		$stmt->execute($params);
 	}
 
 

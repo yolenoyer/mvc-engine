@@ -52,7 +52,7 @@ class Entity
 	 */
 	public function get(string $column_name)
 	{
-		$this->mustBeValidColumnName($column_name);
+		$this->mustColumnExist($column_name);
 		return $this->data[$column_name];
 	}
 
@@ -67,7 +67,7 @@ class Entity
 	 */
 	public function set(string $column_name, $value): Entity
 	{
-		$this->mustBeValidColumnName($column_name);
+		$this->mustColumnExist($column_name);
 		$column = $this->schema->getColumn($column_name);
 		$column->mustBeValidValue($value);
 		$this->data[$column_name] = $value;
@@ -96,9 +96,23 @@ class Entity
 	public function getId()
 	{
 		$this->schema->mustHavePrimaryKey();
-		$id_column = $this->schema->getPrimaryKey();
-		$column_name = $id_column->getName();
+		$column_name = $this->schema->getPrimaryKeyName();
 		return $this->data[$column_name];
+	}
+
+
+	/**
+	 * Définit la clé primaire de l'entité.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return Entity  Pour chainage
+	 */
+	public function setId($value): Entity
+	{
+		$this->schema->mustHavePrimaryKey();
+		$column_name = $this->schema->getPrimaryKeyName();
+		return $this->set($column_name, $value);
 	}
 
 
@@ -114,6 +128,33 @@ class Entity
 	public function columnIsSet(string $column_name): bool
 	{
 		return isset($this->data[$column_name]) && !is_null($this->data[$column_name]);
+	}
+
+
+	/**
+	 * Renvoie les colonnes (définitions) actuellement définies, et n'étant pas autoindent.
+	 *
+	 * @return SchemaColumn[]
+	 */
+	public function getDefinedColumns(): array
+	{
+		return array_filter($this->schema->getColumns(), function($column) {
+			return !$column->isAutoIndent() && $this->columnIsSet($column->getName());
+		});
+	}
+
+
+	/**
+	 * Renvoie les noms des colonnes (définitions) actuellement définies, et n'étant pas autoindent.
+	 * Utile pour mettre à jour une entité dans la base de données.
+	 *
+	 * @return string[]
+	 */
+	public function getDefinedColumnNames(): array
+	{
+		return array_map(function($column) {
+			return $column->getName();
+		}, $this->getDefinedColumns());
 	}
 	
 
@@ -150,7 +191,7 @@ class Entity
 	 *
 	 * @param string $column_name
 	 */
-	public function mustBeValidColumnName(string $column_name)
+	public function mustColumnExist(string $column_name)
 	{
 		Assert::mustBeTrue($this->schema->hasColumn($column_name),
 			"The column '$column_name' does not exist in the '{$this->schema->getName()}' schema."

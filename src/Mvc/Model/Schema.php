@@ -240,11 +240,10 @@ class Schema
 		$success = true;
 		foreach ($this->columns as $column) {
 			$column_name = $column->getName();
-			$type = $column->getType();
 			if (!isset($data[$column_name]) || is_null($data[$column_name])) {
 				continue;
 			}
-			if (!settype($data[$column_name], $type)) {
+			if (!$column->convertValue($data[$column_name])) {
 				$success = false;
 			}
 		}

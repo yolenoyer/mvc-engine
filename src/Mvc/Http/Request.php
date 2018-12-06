@@ -57,6 +57,7 @@ class Request
 		case 'application/json':
 			return json_decode($body, true);
 		case 'application/x-www-form-urlencoded':
+			// TODO: ne fonctionne pas!
 			return $_POST;
 		default:
 			return $body;

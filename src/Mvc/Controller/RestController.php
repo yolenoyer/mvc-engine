@@ -27,7 +27,6 @@ class RestController extends Controller
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->id = $this->request->urlParams->id;
 		$SchemaClass = $this->routeParameters->schema;
 		if (!is_null($SchemaClass)) {
 			$this->schema = new $SchemaClass();
@@ -40,6 +39,13 @@ class RestController extends Controller
 			}
 			$this->schema = Schema::getSchemaFromEntity($EntityClass);
 		}
+
+		$this->id = $this->request->urlParams->id;
+		$primary_key = $this->schema->getPrimaryKey();
+		if (!is_null($this->id) && !is_null($primary_key)) {
+			$primary_key->convertValue($this->id);
+		}
+
 		$this->em = new EntityManager($this->schema);
 	}
 
@@ -64,36 +70,40 @@ class RestController extends Controller
 			case 'POST':
 				$data = $this->request->getBodyData();
 				if (!$this->schema->convertValues($data)) {
-					return new Response('Invalid data set', 400); // Bad Request
+					return new Response('Invalid data types', 400); // Bad Request
 				}
+
 				try {
 					$entity = $this->em->newEntity($data);
 					$entity->mustBeValidData(true); // true = valide+complet (pas de colonne manquante)
 					$this->em->persist($entity);
 				}
 				catch (\Mvc\Exception $e) {
-					return new Response('Invalid data set: '.$e->getMessage(), 400); // Bad Request
+					return new Response('Invalid data: '.$e->getMessage(), 400); // Bad Request
 				}
+
 				return new Response();
 
 			case 'PUT':
-				$entity = $this->em->find($this->id);
-
-				if (is_null($entity)) {
-					return new Response('Not found', 404); // Not Found
+				if (is_null($this->id)) {
+					return new Response('Invalid request', 400);
 				}
 
 				$data = $this->request->getBodyData();
 				if (!$this->schema->convertValues($data)) {
 					return new Response('Invalid data set', 400); // Bad Request
 				}
+
 				try {
-					$entity->setData($data);
+					$entity = $this->em->newEntity($data);
+					$entity->mustBeValidData();
+					$entity->setId($this->id);
+					$this->em->update($entity);
 				}
 				catch (\Mvc\Exception $e) {
-					return new Response('Invalid data', 400); // Bad Request
+					return new Response('Invalid data: '.$e->getMessage(), 400); // Bad Request
 				}
-				$this->em->update($entity);
+
 				return new Response();
 
 			case 'DELETE':

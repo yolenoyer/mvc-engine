@@ -93,6 +93,19 @@ class SchemaColumn
 	{
 		return "{$this->schema->getName()}->{$this->name}";
 	}
+
+
+	/**
+	 * Tente de convertir une valeur vers le type de la colonne.
+	 *
+	 * @param mixed &value  Valeur à convertir (sur place)
+	 *
+	 * @return bool  true si succès
+	 */
+	public function convertValue(&$value): bool
+	{
+		return settype($value, $this->type);
+	}
 	
 
 	/*
@@ -190,7 +203,7 @@ class SchemaColumn
 	{
 		$type = gettype($value);
 		Assert::mustHaveType($value, $this->type,
-			"Wrong type ('$type') for the column '{$this}': must be '{$this->type}'"
+			"Wrong type ($type) for the column '{$this}': must be {$this->type}"
 		);
 	}
 	
