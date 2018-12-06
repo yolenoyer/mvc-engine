@@ -97,6 +97,22 @@ class EntityManager
 
 
 	/**
+	 * Supprime une entité.
+	 *
+	 * @param $id
+	 */
+	public function delete($id)
+	{
+		$key_column_name = $this->schema->getPrimaryKeyName();
+
+		$prepared_query = "DELETE FROM `{$this->schema->getName()}` WHERE `$key_column_name`=?";
+		$stmt = $this->pdo->prepare($prepared_query);
+
+		$stmt->execute([ $id ]);
+	}
+
+
+	/**
 	 * Trouve une entité par son id.
 	 *
 	 * @param mixed $id

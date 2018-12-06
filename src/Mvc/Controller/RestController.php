@@ -107,7 +107,13 @@ class RestController extends Controller
 				return new Response();
 
 			case 'DELETE':
-				return new Response('To be done...', 418, 'text/plain'); // Teapot
+				if (is_null($this->id)) {
+					return new Response('Invalid request', 400);
+				}
+
+				$this->em->delete($this->id);
+
+				return new Response();
 
 			default:
 				return new Response('Unrecognized HTTP method', 405, 'text/plain'); // Method Not Allowed
